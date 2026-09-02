@@ -1,0 +1,127 @@
+site_name: 大模型技术知识 Wiki
+site_description: 一份系统化、图文并茂的中文大模型技术知识库
+site_url: https://liq430.github.io/LLM-Learning-Wiki/
+repo_url: https://github.com/liq430/LLM-Learning-Wiki
+repo_name: liq430/LLM-Learning-Wiki
+edit_uri: edit/main/
+
+# 用 docs/ 作为文档源（chapters/ + images/ 通过软链进入）
+docs_dir: docs
+site_dir: site
+use_directory_urls: true
+# 不启用 strict，避免个别交叉引用失效时整个站点无法构建
+strict: false
+
+# 排除无关文件，避免污染搜索
+exclude_docs: |
+    .git/**
+    .github/**
+    site/**
+    *.py
+    *.log
+    .DS_Store
+
+theme:
+    name: material
+    language: zh
+    features:
+        - navigation.tabs
+        - navigation.tabs.sticky
+        - navigation.sections
+        - navigation.indexes
+        - navigation.top
+        - navigation.tracking
+        - navigation.footer
+        - toc.follow
+        - search.suggest
+        - search.highlight
+        - search.share
+        - content.code.copy
+        - content.action.edit
+    palette:
+        - media: "(prefers-color-scheme: light)"
+          scheme: default
+          primary: indigo
+          accent: indigo
+          toggle:
+              icon: material/brightness-7
+              name: 切换到暗色
+        - media: "(prefers-color-scheme: dark)"
+          scheme: slate
+          primary: indigo
+          accent: indigo
+          toggle:
+              icon: material/brightness-4
+              name: 切换到亮色
+    font:
+        text: Noto Sans SC
+        code: JetBrains Mono
+    icon:
+        repo: fontawesome/brands/github
+
+markdown_extensions:
+    - admonition
+    - attr_list
+    - def_list
+    - footnotes
+    - md_in_html
+    - tables
+    - toc:
+          permalink: true
+          permalink_title: 锚定本节
+          toc_depth: 4
+    - pymdownx.details
+    - pymdownx.superfences:
+          custom_fences:
+              - name: mermaid
+                class: mermaid
+                format: !!python/name:pymdownx.superfences.fence_code_format
+    - pymdownx.tabbed:
+          alternate_style: true
+    - pymdownx.tasklist:
+          custom_checkbox: true
+    - pymdownx.highlight:
+          anchor_linenums: true
+          line_spans: 1
+          pygments_lang_class: true
+    - pymdownx.inlinehilite
+    - pymdownx.snippets
+    - pymdownx.keys
+    - pymdownx.mark
+    - pymdownx.tilde
+    - pymdownx.caret
+    - pymdownx.emoji:
+          emoji_index: !!python/name:material.extensions.emoji.twemoji
+          emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+plugins:
+    - search:
+          lang: zh
+
+nav:
+    - 首页: index.md
+    - 章节:
+      - 00. 导读与学习路线图: chapters/00-导读与学习路线图.md
+      - 01. 数学基础（大模型面试够用版）: chapters/01-数学基础.md
+      - 02. Transformer 与模型架构: chapters/02-Transformer 与模型架构.md
+      - 03. 预训练 Pre-Training: chapters/03-预训练 Pre-Training.md
+      - 04. 微调与参数高效微调: chapters/04-微调与参数高效微调.md
+      - 05. 对齐与强化学习: chapters/05-对齐与强化学习.md
+      - 06. 量化与模型压缩: chapters/06-量化与模型压缩.md
+      - 07. 推理与部署: chapters/07-推理与部署.md
+      - 08. RAG 检索增强生成: chapters/08-RAG 检索增强生成.md
+      - 09. 智能体: chapters/09-智能体.md
+      - 10. Prompt 工程与推理引导: chapters/10-Prompt 工程与推理引导.md
+      - 11. 大模型评估体系: chapters/11-大模型评估体系.md
+      - 12. 工程落地与安全合规: chapters/12-工程落地与安全合规.md
+      - 13. 面试冲刺：手算与高频百问: chapters/13-面试冲刺手算与高频百问.md
+      - 14. 学习资源与进阶路线: chapters/14-学习资源与进阶路线.md
+      - 15. 前沿动态与趋势: chapters/15-前沿动态与趋势.md
+      - 99. 附录: chapters/99-附录.md
+
+extra:
+    social:
+        - icon: fontawesome/brands/github
+          link: https://github.com/liq430
+          name: GitHub
+    generator: false

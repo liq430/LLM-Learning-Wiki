@@ -1,2 +1,6 @@
 .DS_Store
 *.log
+# MkDocs 构建产物（不提交）
+site/
+# 一些临时文件
+*.tmp
