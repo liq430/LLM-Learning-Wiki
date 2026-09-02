@@ -167,7 +167,7 @@ $$
 
 #### 3.2.2 数据流水线七步
 
-![预训练数据流水线 7 步：原始抓取→格式清洗→去重→质量过滤→混合配比→课程→反污染→分词](images/data_pipeline.png)
+![预训练数据流水线 7 步：原始抓取→格式清洗→去重→质量过滤→混合配比→课程→反污染→分词](../images/data_pipeline.png)
 
 **图：预训练数据处理流水线。每一步都会显著影响最终模型质量，其中去重与质量过滤的收益最大。**
 
@@ -289,7 +289,7 @@ $$
 - **数据墙（Data Wall）**：高质量公开文本总量有限（估计几十 T token），继续放大数据会撞墙，因此合成数据与多模态数据成为新方向；
 - **收益递减**：从 1B 到 10B 的提升远大于从 100B 到 1T，边际效益下降明显。
 
-![Kaplan/Chinchilla Scaling Law：loss-N 幂律与最优 N/D 标尺](images/scaling_law.png)
+![Kaplan/Chinchilla Scaling Law：loss-N 幂律与最优 N/D 标尺](../images/scaling_law.png)
 
 **图：Scaling Law 示意——左为损失随算力的幂律下降；右为 Chinchilla 的 IsoFLOP 曲线，每个算力预算下存在一个最优模型规模，其轨迹对应"参数与数据等比放大"。**
 
@@ -505,7 +505,7 @@ MoE 模型额外加         → 专家并行 EP
 | 千亿级，数百卡 | TP=8 + PP=8 + DP=N，配合 ZeRO-1 省优化器状态 |
 | MoE 千亿级 | 上述 + EP，专家分布在机间 |
 
-![分布式训练五大策略总览：DP / ZeRO / TP / PP / SP-CP](images/parallel_strategies.png)
+![分布式训练五大策略总览：DP / ZeRO / TP / PP / SP-CP](../images/parallel_strategies.png)
 
 **图：五种并行策略的切分视角。DP 切数据、TP 切矩阵、PP 切层、ZeRO 切状态、SP/CP 切序列，实际训练中是多种策略的组合。**
 

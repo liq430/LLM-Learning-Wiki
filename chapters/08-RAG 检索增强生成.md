@@ -143,7 +143,7 @@ RAG（Retrieval-Augmented Generation，检索增强生成）由 Lewis et al. 202
 - **Advanced RAG**：在 Naive 的每一步做优化。**Pre-Retrieval**（query 改写、HyDE、metadata 过滤、路由）；**Retrieval**（混合检索、small-to-big、子查询分解）；**Post-Retrieval**（rerank、压缩、引用标注、上下文裁剪）。
 - **Modular RAG**：把 RAG 拆成可插拔的模块（Search、Memory、Routing、Predict、Task Adapter、Reflection），各模块自由组合；进一步演化成 Agentic RAG，由 LLM 自己做规划、路由、反思。
 
-![rag_evolution_paradigms](images/rag_evolution_paradigms.png)
+![rag_evolution_paradigms](../images/rag_evolution_paradigms.png)
 
 > **面试提醒**：被问到"RAG 的最新进展"时，按 Naive → Advanced → Modular → Agentic 的演化脉络回答最稳，能体现你不是只看 2023 年那篇 Lewis 论文。
 
@@ -200,7 +200,7 @@ PDF 不是"纯文本+排版"，它是"画在白板上的指令"：文本对象�
 
 研究（Larson et al. 2024, "Evaluating the Impact of Source Documents on LLM-based RAG Systems"）表明：**文档解析错误是 RAG 系统最大单一失败源**。一个被错误切碎成 4 块的表格，比一个错误切碎成 4 段的叙述段落，**对回答的伤害大 2–3 倍**——因为表格是结构化信息，结构一断就全错。
 
-![rag_doc_parsing_pipeline](images/rag_doc_parsing_pipeline.png)
+![rag_doc_parsing_pipeline](../images/rag_doc_parsing_pipeline.png)
 
 > 上图示意了文档解析流水线的核心环节：原始 PDF/Word/扫描件 → 版面分析（标题 / 正文 / 表格 / 图片）→ 阅读顺序恢复 → OCR（扫描件）/ 公式识别 → 结构化输出（Markdown + HTML 表格 + LaTeX 公式）。**任何一个环节失误都会向下游传播**，因此这一阶段的容错率最低、工程投入最大。
 
@@ -292,7 +292,7 @@ BGE-M3 内部就有"dense + sparse + 多向量（ColBERT 风格）"三种粒度�
 
 经验区间（**中文 RAG 为主**）：
 
-![rag_chunking_strategies](images/rag_chunking_strategies.png)
+![rag_chunking_strategies](../images/rag_chunking_strategies.png)
 
 | 任务 | 推荐 chunk_size | overlap | 备注 |
 |---|---|---|---|
@@ -423,7 +423,7 @@ OpenAI text-embedding-3 也用类似机制（内部不可见）。**实操时一
 - 3072 / 4096 留给"追求极致召回"且**存储不敏感**的场景（OpenAI large / Qwen3-8B）；
 - 256 以下除非有强存储约束，否则不推荐——会让长文档语义被压平。
 
-![rag_embedding_evolution](images/rag_embedding_evolution.png)
+![rag_embedding_evolution](../images/rag_embedding_evolution.png)
 
 > 上图（参考 Hugging Face 博客"32_1b_sentence_embeddings"系列图）示意了文本表示从 2013 Word2Vec 的静态词向量到 2019 Sentence-BERT 的孪生网络句向量，再到 2024 指令感知 embedding 的演进路径。每个阶段的洞察都源自上一阶段的失败：Word2Vec 无上下文 → BERT 的 [CLS] 不如 mean pooling → 不区分 query/doc 的 embedding 拉跨了异构检索。
 
@@ -534,7 +534,7 @@ ES 8.x 默认量化策略：
 
 > **真实项目选型参考**（招投标 RAG 知识库场景）：数据量小于 100 万 chunk + 强 BM25 关键词需求 + 已有运维栈 → 几乎都是 ES 双索引（BM25 索引 + 向量字段）。
 
-![rag_vector_db_compare](images/rag_vector_db_compare.png)
+![rag_vector_db_compare](../images/rag_vector_db_compare.png)
 
 ### 8.6 混合检索与重排
 
@@ -681,7 +681,7 @@ GET /bidding_docs/_search
 
 **Rerank 经验值**：候选数 30–50（再大边际收益递减、延迟上升）；**Rerank 后 RAGAS Faithfulness 通常涨 5–15 个点**。
 
-![rag_rerank_pipeline](images/rag_rerank_pipeline.png)
+![rag_rerank_pipeline](../images/rag_rerank_pipeline.png)
 
 ### 8.7 Query 侧优化
 
@@ -691,7 +691,7 @@ GET /bidding_docs/_search
 
 把口语化 / 残缺 query 改写成更"检索友好"的版本：
 
-![rag_query_optimization](images/rag_query_optimization.png)
+![rag_query_optimization](../images/rag_query_optimization.png)
 
 ```
 [user]  "那个关于 XX 项目的预算文件在哪"
@@ -838,7 +838,7 @@ Edge et al. 2024, "From Local to Global: A Graph RAG Approach to Query-Focused S
 
 **LightRAG**（Guo et al. 2024, HKUDS, arXiv:2410.05779）：图结构 + 双层（low-level / high-level）检索 + 增量更新。**比 GraphRAG 轻 2–5×**，适合中小规模知识库。
 
-![rag_graphrag_pipeline](images/rag_graphrag_pipeline.png)
+![rag_graphrag_pipeline](../images/rag_graphrag_pipeline.png)
 
 #### 8.7.9 各方法选型速查
 
@@ -968,7 +968,7 @@ Agentic RAG 需要的不只是 LLM 聪明：
 
 不评估的 RAG 就是在盲调参。**评估体系是 RAG 系统的"测试工程师"**。
 
-![rag_eval_pipeline](images/rag_eval_pipeline.png)
+![rag_eval_pipeline](../images/rag_eval_pipeline.png)
 
 #### 8.9.1 评估三件套
 
@@ -1105,7 +1105,7 @@ RGB（Retrieval-Augmented Generation Benchmark）把 RAG 能力拆成四个维�
 
 > **本节结合实际招投标 RAG 知识库项目**（FastAPI + 阿里云百炼 embedding + ES 双索引：文档级检索 + 问答 chunk 索引）。每一条都是项目里踩过或避开的坑。
 
-![rag_es_hybrid_arch](images/rag_es_hybrid_arch.png)
+![rag_es_hybrid_arch](../images/rag_es_hybrid_arch.png)
 
 > 上图展示了 RAG 系统的典型工程架构：左侧"离线索引"链路（解析 → chunking → embedding → 入库）和右侧"在线服务"链路（query 理解 → 混合检索 → rerank → 生成）通过 ES 双索引 + Redis 缓存 + LLM 网关衔接。红色为瓶颈点（embedding API、LLM 网关），需要重点限流与重试。
 
@@ -1308,7 +1308,7 @@ class EmbeddingClient:
 | **query 缓存** | query → 完整回答 | 中 | Redis + TTL |
 | **语义缓存** | 相似 query → 同一回答 | 中 | GPTCache / 自建向量检索 |
 
-![rag_caching_layer](images/rag_caching_layer.png)
+![rag_caching_layer](../images/rag_caching_layer.png)
 
 **GPTCache**（Zilliz 开源）：把 query 也 embedding 进向量库，相似的 query 命中时直接返回缓存的回答。**对重复/近似 query 多的场景**（客服、FAQ）非常有效。
 
@@ -1370,7 +1370,7 @@ cache.init(
 
 上线后必看的运行时指标：
 
-![rag_monitoring_dashboard](images/rag_monitoring_dashboard.png)
+![rag_monitoring_dashboard](../images/rag_monitoring_dashboard.png)
 
 | 指标 | 目标 | 告警阈值 |
 |---|---|---|

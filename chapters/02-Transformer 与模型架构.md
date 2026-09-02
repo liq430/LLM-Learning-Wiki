@@ -182,7 +182,7 @@ LSTM 通过门控机制（遗忘门、输入门、输出门）缓解了梯度消
 - **编码器（Encoder）**：6 个完全相同的层堆叠，每层含"多头自注意力 + 前馈网络"两个子层，用于把源语言句子编码成一系列上下文相关的表示。
 - **解码器（Decoder）**：6 个完全相同的层堆叠，每层含三个子层——"带掩码的多头自注意力 + 交叉注意力 + 前馈网络"，用于逐词生成目标语言。
 
-![Transformer 编码器-解码器整体架构](images/transformer_architecture.png)
+![Transformer 编码器-解码器整体架构](../images/transformer_architecture.png)
 
 **图：Transformer 整体架构（编码器-解码器）。左侧为编码器栈，右侧为解码器栈。图源：Jay Alammar, The Illustrated Transformer。**
 
@@ -205,7 +205,7 @@ X_2 &= X_1 + \text{FFN}\big(\text{Norm}_2(X_1)\big)
 \end{aligned}
 $$
 
-![编码器层内部结构：残差连接、归一化、多头注意力与前馈网络](images/transformer_encoder_layer.png)
+![编码器层内部结构：残差连接、归一化、多头注意力与前馈网络](../images/transformer_encoder_layer.png)
 
 **图：编码器层内部结构——残差连接 + 归一化 + 多头注意力 + 前馈网络。图源：Jay Alammar。**
 
@@ -313,7 +313,7 @@ $$
 
 **一个直观的数量级感受**：n 从 4K 增加到 128K（32 倍），n² 项增长 1024 倍，而 n·d² 项只增长 32 倍。所以长上下文优化的第一优先级永远是干掉注意力矩阵的平方项。
 
-![缩放点积注意力的四个步骤与张量形状](images/attention_steps.png)
+![缩放点积注意力的四个步骤与张量形状](../images/attention_steps.png)
 
 **图：缩放点积注意力的四个步骤与张量形状变化。n×n 的分数矩阵既是显存压力源，也是 FlashAttention 与各类稀疏注意力的优化靶心。**
 
@@ -374,7 +374,7 @@ $$
 
 #### 2.3.6 注意力权重到底学到了什么（可视化解读）
 
-![Self-Attention 权重可视化](images/attention_visualization.png)
+![Self-Attention 权重可视化](../images/attention_visualization.png)
 
 **图：注意力权重可视化——颜色深浅表示当前位置（左）对其他位置（上）的关注程度，可以观察到明显的指代消解与句法依赖模式。图源：Jay Alammar。**
 
@@ -452,7 +452,7 @@ out = self.o_proj(out)
 2. **太大**（如 256）：失去了多头带来的多样性，退化回单头；
 3. **硬件对齐**：GPU 张量核心对 64/128 的倍数有最优访存与计算效率。
 
-![多头注意力：Q/K/V 的切分与各头独立计算](images/multihead_qkv.png)
+![多头注意力：Q/K/V 的切分与各头独立计算](../images/multihead_qkv.png)
 
 **图：多头注意力中 Q/K/V 的切分与各头独立计算过程。图源：Jay Alammar。**
 
@@ -500,7 +500,7 @@ $$
 
 **局限**：理论上能表达相对位置，但实践中经过 W_Q、W_K 线性变换后，这个优美的性质被破坏；且绝对位置编码在长度外推时表现很差（训练 512 长度，推理 2048 时效果断崖）。
 
-![正弦位置编码可视化](images/positional_encoding.png)
+![正弦位置编码可视化](../images/positional_encoding.png)
 
 **图：正弦位置编码的可视化——横轴为位置，纵轴为维度，可以看到不同维度对应不同频率的波纹。图源：Jay Alammar。**
 
@@ -816,7 +816,7 @@ $$
 
 这就是 LLaMA 中隐藏维度取 `d_ff = 2/3 · 4d`（并对齐到 256 的倍数）的由来。
 
-![SwiGLU 门控前馈网络结构](images/swiglu.png)
+![SwiGLU 门控前馈网络结构](../images/swiglu.png)
 
 **图：SwiGLU 门控前馈网络结构——输入分别经过两个线性投影，一路做 Swish 激活后与另一路逐元素相乘，再经输出投影。**
 

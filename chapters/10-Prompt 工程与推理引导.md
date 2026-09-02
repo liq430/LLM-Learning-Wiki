@@ -98,7 +98,7 @@
 
 与传统 API 的关键区别在于**容错性高但精确性低**：同一个意图有无数种写法都能"跑通"，但效果差异巨大；没有编译器帮你抓语法错误，只有评测集能告诉你"这次改动是变好还是变坏"。
 
-![prompt-engineering_prompt-small-modifications](images/prompt-engineering_prompt-small-modifications.png)
+![prompt-engineering_prompt-small-modifications](../images/prompt-engineering_prompt-small-modifications.png)
 
 > 上图（来自 Anthropic prompt engineering 技术资料）示意了"小幅修改 prompt 带来大幅效果变化"的典型场景：同样的任务描述，加上输出格式约定、加上"不确定时回答不知道"的兜底指令，结果分布完全不同。这正是 Prompt 工程的核心矛盾——**杠杆极大，但需要评测兜底才敢拉动**。
 
@@ -256,7 +256,7 @@ ICL 由 [GPT-3（Brown et al. 2020）](https://arxiv.org/abs/2005.14165) 系统�
 - **难例覆盖**：示例应覆盖典型分布 + 容易出错的边界情况（比如抽实体时给一个"没有实体"的例子），引导模型学会拒答。
 - **反例与纠错**：示例中展示"错误输入如何被处理"（比如标注为不可答），比全给正例更能稳定边界行为。
 
-![prompt-engineering_image7-1](images/prompt-engineering_image7-1.png)
+![prompt-engineering_image7-1](../images/prompt-engineering_image7-1.png)
 
 > 上图（来自 Anthropic 的 LLM 定制技术综述）把"不训练就定制模型行为"的手段分为梯度层（RAG / 检索增强）与提示层（系统提示、few-shot 示例）两大族：RAG 注入的是**知识**，few-shot 注入的是**任务范式**。本节讨论的是后者——用示例定义"这类任务长什么样"，而不是"这个事实是什么"。
 
@@ -345,7 +345,7 @@ Kojima et al. 2022（"Large Language Models are Zero-Shot Reasoners"，[arXiv:22
 - 中文场景用"请一步一步思考"同样有效；"let's think step by step" 是社区惯用锚点。
 - 推理模型的演变：o1 / R1 类模型把这一步内置，外部再堆"一步一步思考"不仅无益还可能画蛇添足——**技巧要跟模型代际**（呼应 10.1.2）。
 
-![reasoning_cot-decoding](images/reasoning_cot-decoding.png)
+![reasoning_cot-decoding](../images/reasoning_cot-decoding.png)
 
 > 上图对比了标准解码（直接输出答案）与 CoT 解码（先输出中间步骤再给答案）的差异：同样的模型与权重，只在"输出什么"上不同，正确率差异可达数倍——这就是"外化思考"的力量。
 
@@ -414,7 +414,7 @@ def self_consistency(question: str, n: int = 8, temp: float = 0.6) -> str:
 
 **忠实性警告（Faithfulness）**：Turpin et al. 2023（"Language Models Don't Always Say What They Think"，[arXiv:2305.04388](https://arxiv.org/abs/2305.04388)）证明：**CoT 未必反映模型真实的决策依据**——通过在 prompt 里加入偏置因素（如答案选项顺序），模型输出受偏置影响，但推理链上对此只字不提。工程含义：**CoT 解释可以当调试线索，不能当合规审计证据**。金融、医疗等强合规场景的"可解释性"需求，要靠证据引用（RAG 引用）而非模型自述推理链来满足。
 
-![Chain-of-Thought 随模型规模涌现：MultiArith / GSM8K 上的解出率](images/cot_scaling.png)
+![Chain-of-Thought 随模型规模涌现：MultiArith / GSM8K 上的解出率](../images/cot_scaling.png)
 
 > 上图示意了 CoT 效果随模型规模的变化：小模型区间 CoT 常常为负收益（出现"能力不足却强行推理"的退化），跨过约 100B 量级后收益跃升——这是大模型"涌现能力"讨论（Wei et al. 2022, "Emergent Abilities of Large Language Models"）的经典例证。
 
@@ -468,7 +468,7 @@ $$
 
 其中 `V(s)` 是节点累积价值、`n(s)` 是访问次数、`c` 是探索系数。价值信号可以来自模型自评，也可以来自真实反馈（测试用例通过率、编译器报错）。
 
-![Tree of Thoughts：CoT 的搜索树扩展](images/tot_tree_search.png)
+![Tree of Thoughts：CoT 的搜索树扩展](../images/tot_tree_search.png)
 
 > 上图示意了 ToT 在同一父节点下生成多个候选想法、由评估器打分、BFS/DFS 保留最优分支并允许回溯的过程。**树搜索的关键收益不是"想得更多"，而是"错了能回头"**——这是链式推理在机制上做不到的。
 
@@ -523,7 +523,7 @@ Reflexion 的最小闭环（伪流程）：
 
 与 Self-Refine 的关键差异：Reflexion 的反馈来自**环境**（测试通过与否），反思是跨尝试的长期记忆；Self-Refine 的反馈来自**模型自评**，同轮内闭环。前者可靠、后者廉价——生产上按"有没有可自动化的验证器"来选。
 
-![react_loop](images/react_loop.png)
+![react_loop](../images/react_loop.png)
 
 > 上图示意 ReAct（Yao et al. 2022，[arXiv:2210.03629](https://arxiv.org/abs/2210.03629)）的 Thought-Action-Observation 循环：推理与行动交替进行，每步行动的真实结果（Observation）作为外部反馈注入下一步推理。ReAct 是"外部信号驱动修正"的最小闭环，也是第 8 章 Agentic RAG 与第 11 章智能体的基础范式。
 
@@ -544,7 +544,7 @@ Snell et al. 2024（"Scaling LLM Test-Time Compute Optimally can be More Effecti
 | 难题 | 采不出新路径，饱和 | 优势区间 |
 | 可控性 | N、temperature 直接可控 | 需靠"思考预算"参数或截断策略 |
 
-![reasoning_parallel-vs-sequential](images/reasoning_parallel-vs-sequential.png)
+![reasoning_parallel-vs-sequential](../images/reasoning_parallel-vs-sequential.png)
 
 > 上图对比了两条测试时扩展曲线：并行扩展（Self-Consistency / Best-of-N，同一深度水平铺开多路采样）与串行扩展（长推理链，单路纵深生长）。两条曲线的斜率不同、适用区间不同——**并行赢在简单题的性价比与可并发，串行赢在难题的深度搜索**，工程上先判断题目难度与可验证性，再决定往哪个方向花算力。
 
@@ -672,7 +672,7 @@ ws      ::= " "*
 
 每个 token 解码后进入文法下一状态，非法字符被 mask——模型只能"在文法里说话"。枚举字段（如上面的四分类）用文法表达最自然，**把"输出格式对不对"从概率问题变成编译问题**。
 
-![decoding-strategies_ctrl-control-code](images/decoding-strategies_ctrl-control-code.png)
+![decoding-strategies_ctrl-control-code](../images/decoding-strategies_ctrl-control-code.png)
 
 > 上图（CTRL 论文风格示意）展示了不同解码控制手段对生成分布的影响：同一模型，temperature、重复惩罚、前缀控制组合不同，输出风格与重复度差异显著。**解码参数是 prompt 之外第二大行为旋钮**，调 prompt 前先确认参数没拖后腿。
 
