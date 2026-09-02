@@ -118,4 +118,4 @@ mkdocs build
 - 章节标题锚点统一按 GitHub 的 `github-slugger` 规则生成（968 个标题已逐条校验，0 差异），
   因此在 GitHub 复制的标题链接可以直接粘到文档站，反之亦然。
 - 配套脚本：`prepare_github.py`（从 `parts/*.md` 原始素材生成本仓库结构）。
-- 最近更新：2026-09-02 · GitHub commit `7cfa080`
+- 最近更新：2026-09-02 · 本次修复对应 GitHub commit [`2c6184a`](https://github.com/liq430/LLM-Learning-Wiki/commit/2c6184a)
