@@ -64,12 +64,14 @@ theme:
     icon:
         repo: fontawesome/brands/github
 
-# 数学公式：手动加载 MathJax（Material 9.x 不再内置 math 扩展）
-# 顺序很关键：先注入 window.MathJax 配置（加载 ams 包），再加载 MathJax 主库
-# 主库**自托管**而非 CDN，国内访问 jsdelivr/unpkg 经常被墙或慢到超时
+# 数学公式：手动加载 MathJax（Material 9.x 已移除内置 math 扩展，配 theme.math 无效）
+# 顺序不可颠倒：
+#   1) mathjax.js        —— 先注入 window.MathJax 配置（含 ams 扩展包）
+#   2) mathjax-loader.js —— 再加载主库：BootCDN → 阿里云 → 仓库自托管，逐级回退
+# 主库不再是写死的 CDN 地址：国内访问 jsdelivr/unpkg 常被墙，写死会整页公式失效。
 extra_javascript:
     - javascripts/mathjax.js
-    - javascripts/tex-mml-chtml.js
+    - javascripts/mathjax-loader.js
 
 markdown_extensions:
     - admonition
