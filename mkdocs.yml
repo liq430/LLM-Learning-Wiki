@@ -66,9 +66,10 @@ theme:
 
 # 数学公式：手动加载 MathJax（Material 9.x 不再内置 math 扩展）
 # 顺序很关键：先注入 window.MathJax 配置（加载 ams 包），再加载 MathJax 主库
+# 主库**自托管**而非 CDN，国内访问 jsdelivr/unpkg 经常被墙或慢到超时
 extra_javascript:
     - javascripts/mathjax.js
-    - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+    - javascripts/tex-mml-chtml.js
 
 markdown_extensions:
     - admonition
