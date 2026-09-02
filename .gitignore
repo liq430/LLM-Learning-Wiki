@@ -2,5 +2,8 @@
 *.log
 # MkDocs 构建产物（不提交）
 site/
+# Python 缓存（mkdocs_hooks.py 被加载后产生）
+__pycache__/
+*.py[cod]
 # 一些临时文件
 *.tmp

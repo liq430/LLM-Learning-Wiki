@@ -5,6 +5,11 @@ repo_url: https://github.com/liq430/LLM-Learning-Wiki
 repo_name: liq430/LLM-Learning-Wiki
 edit_uri: edit/main/
 
+# 让 MkDocs 的标题锚点与 GitHub 完全一致（见 mkdocs_hooks.py）
+# 否则两侧锚点不通：Python-Markdown 默认会把中文全删掉，锚点退化成纯数字
+hooks:
+    - mkdocs_hooks.py
+
 # 用 docs/ 作为文档源（chapters/ + images/ 通过软链进入）
 docs_dir: docs
 site_dir: site

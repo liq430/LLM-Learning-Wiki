@@ -1,0 +1,4 @@
+# 文档站构建依赖（GitHub Actions 与本地通用）
+mkdocs>=1.6
+mkdocs-material>=9.5
+pymdown-extensions>=10.7
