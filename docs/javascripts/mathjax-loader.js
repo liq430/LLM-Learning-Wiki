@@ -44,10 +44,12 @@
 
     if (isLocal) {
       // 明确告诉 MathJax 自托管根目录，ams 包会去 <root>/input/tex/extensions/ams.js 找
+      // 注意：去掉尾部斜杠——MathJax 的路径/字体模板是 "[mathjax]/xxx" 形式，
+      //       根目录若带尾斜杠会拼出 "javascripts//output/..."（双斜杠 → 字体 404）
       window.MathJax = window.MathJax || {};
       window.MathJax.loader = window.MathJax.loader || {};
       window.MathJax.loader.paths = window.MathJax.loader.paths || {};
-      window.MathJax.loader.paths.mathjax = url.replace(/tex-mml-chtml\.js$/, "");
+      window.MathJax.loader.paths.mathjax = url.replace(/tex-mml-chtml\.js$/, "").replace(/\/$/, "");
     }
 
     var s = document.createElement("script");
