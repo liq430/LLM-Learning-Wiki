@@ -128,16 +128,23 @@ def _protect_math(text):
 
 
 def _restore_math(html_text, store):
-    """把哨兵 token 还原成公式原文。
+    r"""把哨兵 token 还原成公式原文。
 
-    公式原文是 LaTeX，可能含 < > &，直接塞回 HTML 会破坏结构，
-    因此统一做 HTML 转义；浏览器解析后 MathJax 读到的仍是原始字符。
+    关键：块级 $$ ... $$ 在 mkdocs 的 <p> 里会被 MathJax 当成两个 inline 配对，
+    渲染成 2 个 inline mjx-container（且样式不对）；还原时把多行 $$ ... $$
+    改写成 \[ ... \]（MathJax 显式 display 标记），强制按 display 渲染。
+
+    同时做 HTML 转义，避免公式里的特殊字符破坏页面结构。
     """
     def back(m):
         i = int(m.group(1))
         if i >= len(store):
             return m.group(0)
-        return _html.escape(store[i], quote=False)
+        body = _html.escape(store[i], quote=False)
+        if body.startswith("$$") and body.endswith("$$"):
+            inner = body[2:-2].strip()
+            return "\\[\n" + inner + "\n\\]"
+        return body
 
     return re.sub(_MATH_PREFIX + r"(\d+)" + _MATH_SUFFIX, back, html_text)
 
@@ -183,7 +190,11 @@ def on_page_markdown(markdown, page, config, files):
 
 
 def on_page_content(html, page, config, files, **_kwargs):
-    """HTML 生成后还原被保护的公式。"""
+    r"""HTML 生成后还原被保护的公式。
+
+    还原时块级 $$...$$ 已被 _restore_math 改写成 \[ ... \]（显式 display 标记），
+    所以不需要再把块级公式从 <p> 里抠出来另包 <div>。
+    """
     store = _MATH_STORE.pop(page.file.src_path, None)
     if store:
         html = _restore_math(html, store)
