@@ -50,35 +50,45 @@
   - [8.7.5 子查询分解（Sub-Query Decomposition）](#875-子查询分解sub-query-decomposition)
   - [8.7.6 Self-RAG（Asai et al. 2023 ICLR）](#876-self-ragasai-et-al-2023-iclr)
   - [8.7.7 Corrective RAG（CRAG, Yan et al. 2024）](#877-corrective-ragcrag-yan-et-al-2024)
-  - [8.7.8 GraphRAG（Microsoft 2024）](#878-graphragmicrosoft-2024)
+  - [8.7.8 图 RAG（GraphRAG / LightRAG / LazyGraphRAG）](#878-图-raggraphrag--lightrag--lazygraphrag)
   - [8.7.9 各方法选型速查](#879-各方法选型速查)
-- [8.8 Agentic RAG](#88-agentic-rag)
-  - [8.8.1 从 Pipeline 到 Agent](#881-从-pipeline-到-agent)
-  - [8.8.2 ReAct 在 RAG 中的落法](#882-react-在-rag-中的落法)
-  - [8.8.3 关键能力清单](#883-关键能力清单)
-  - [8.8.4 长上下文能否替代 RAG](#884-长上下文能否替代-rag)
-  - [8.8.5 Agentic RAG 的代价](#885-agentic-rag-的代价)
-- [8.9 RAG 评估体系](#89-rag-评估体系)
-  - [8.9.1 评估三件套](#891-评估三件套)
-  - [8.9.2 检索侧指标](#892-检索侧指标)
-  - [8.9.3 RAGAS 四大指标](#893-ragas-四大指标)
-  - [8.9.4 ARES（Automated REE-val System, Saad-Falcon et al. 2024）](#894-aresautomated-ree-val-system-saad-falcon-et-al-2024)
-  - [8.9.5 RGB 基准（Chen et al. 2024）](#895-rgb-基准chen-et-al-2024)
-  - [8.9.6 CRUD-RAG（Lyons et al. 2024）](#896-crud-raglyons-et-al-2024)
-  - [8.9.7 评测集怎么造](#897-评测集怎么造)
-- [8.10 工程落地](#810-工程落地)
-  - [8.10.1 ES 混合索引设计](#8101-es-混合索引设计)
-  - [8.10.2 metadata 过滤与分区](#8102-metadata-过滤与分区)
-  - [8.10.3 增量更新与索引版本管理](#8103-增量更新与索引版本管理)
-  - [8.10.4 批量 embedding 的限流与重试](#8104-批量-embedding-的限流与重试)
-  - [8.10.5 缓存](#8105-缓存)
-  - [8.10.6 中文场景特有问题](#8106-中文场景特有问题)
-  - [8.10.7 引用溯源与可解释性](#8107-引用溯源与可解释性)
-  - [8.10.8 监控指标](#8108-监控指标)
-  - [8.10.9 性能与成本基准（2025 年典型）](#8109-性能与成本基准2025-年典型)
-- [8.11 高频面试题](#811-高频面试题)
-- [8.12 三句话总结](#812-三句话总结)
-- [8.13 延伸阅读](#813-延伸阅读)
+- [8.8 知识图谱与图 RAG](#88-知识图谱与图-rag)
+  - [8.8.1 向量 RAG 的三个结构性缺陷](#881-向量-rag-的三个结构性缺陷)
+  - [8.8.2 知识图谱基础](#882-知识图谱基础)
+  - [8.8.3 图谱构建流水线](#883-图谱构建流水线)
+  - [8.8.4 GraphRAG 深度拆解（Microsoft, Edge et al. 2024）](#884-graphrag-深度拆解microsoft-edge-et-al-2024)
+  - [8.8.5 LazyGraphRAG：把 LLM 延后到查询时](#885-lazygraphrag把-llm-延后到查询时)
+  - [8.8.6 LightRAG：图索引 + 双层检索 + 增量更新](#886-lightrag图索引--双层检索--增量更新)
+  - [8.8.7 图 + 向量混合检索](#887-图--向量混合检索)
+  - [8.8.8 选型速查与成本基准](#888-选型速查与成本基准)
+  - [8.8.9 图 RAG 的失败模式与排查](#889-图-rag-的失败模式与排查)
+- [8.9 Agentic RAG](#89-agentic-rag)
+  - [8.9.1 从 Pipeline 到 Agent](#891-从-pipeline-到-agent)
+  - [8.9.2 ReAct 在 RAG 中的落法](#892-react-在-rag-中的落法)
+  - [8.9.3 关键能力清单](#893-关键能力清单)
+  - [8.9.4 长上下文能否替代 RAG](#894-长上下文能否替代-rag)
+  - [8.9.5 Agentic RAG 的代价](#895-agentic-rag-的代价)
+- [8.10 RAG 评估体系](#810-rag-评估体系)
+  - [8.10.1 评估三件套](#8101-评估三件套)
+  - [8.10.2 检索侧指标](#8102-检索侧指标)
+  - [8.10.3 RAGAS 四大指标](#8103-ragas-四大指标)
+  - [8.10.4 ARES（Automated REE-val System, Saad-Falcon et al. 2024）](#8104-aresautomated-ree-val-system-saad-falcon-et-al-2024)
+  - [8.10.5 RGB 基准（Chen et al. 2024）](#8105-rgb-基准chen-et-al-2024)
+  - [8.10.6 CRUD-RAG（Lyons et al. 2024）](#8106-crud-raglyons-et-al-2024)
+  - [8.10.7 评测集怎么造](#8107-评测集怎么造)
+- [8.11 工程落地](#811-工程落地)
+  - [8.11.1 ES 混合索引设计](#8111-es-混合索引设计)
+  - [8.11.2 metadata 过滤与分区](#8112-metadata-过滤与分区)
+  - [8.11.3 增量更新与索引版本管理](#8113-增量更新与索引版本管理)
+  - [8.11.4 批量 embedding 的限流与重试](#8114-批量-embedding-的限流与重试)
+  - [8.11.5 缓存](#8115-缓存)
+  - [8.11.6 中文场景特有问题](#8116-中文场景特有问题)
+  - [8.11.7 引用溯源与可解释性](#8117-引用溯源与可解释性)
+  - [8.11.8 监控指标](#8118-监控指标)
+  - [8.11.9 性能与成本基准（2025 年典型）](#8119-性能与成本基准2025-年典型)
+- [8.12 高频面试题](#812-高频面试题)
+- [8.13 三句话总结](#813-三句话总结)
+- [8.14 延伸阅读](#814-延伸阅读)
   - [论文 / 综述](#论文--综述)
   - [博客 / 实战](#博客--实战)
   - [GitHub 仓库（可直接跑）](#github-仓库可直接跑)
@@ -97,12 +107,13 @@
 | 8.4 | Embedding：从 Word2Vec 到 Qwen3-Embedding | ★★★★★ |
 | 8.5 | 向量数据库：HNSW / 量化 / 各引擎对比 | ★★★★★ |
 | 8.6 | 混合检索 + Rerank：BM25 / SPLADE / RRF / Cross-Encoder | ★★★★★ |
-| 8.7 | Query 侧优化：HyDE / Multi-Query / Self-RAG / GraphRAG | ★★★★ |
-| 8.8 | Agentic RAG：路由 / 工具 / 反思 / 与长上下文对比 | ★★★★ |
-| 8.9 | RAG 评估：RAGAS / ARES / RGB / CRUD-RAG | ★★★★ |
-| 8.10 | 工程落地：ES 混合索引 / 缓存 / 中文场景（重点） | ★★★★★ |
-| 8.11 | 高频面试题 | ★★★★★ |
-| 8.12 | 总结与延伸阅读 | ★★ |
+| 8.7 | Query 侧优化：HyDE / Multi-Query / Self-RAG / 图 RAG 引子 | ★★★★ |
+| 8.8 | 知识图谱与图 RAG：GraphRAG / LazyGraphRAG / LightRAG | ★★★★ |
+| 8.9 | Agentic RAG：路由 / 工具 / 反思 / 与长上下文对比 | ★★★★ |
+| 8.10 | RAG 评估：RAGAS / ARES / RGB / CRUD-RAG | ★★★★ |
+| 8.11 | 工程落地：ES 混合索引 / 缓存 / 中文场景（重点） | ★★★★★ |
+| 8.12 | 高频面试题 | ★★★★★ |
+| 8.13 | 总结与延伸阅读 | ★★ |
 
 > **本章主线问题**：RAG 凭什么能"低成本"地解决大模型幻觉、知识时效和私域可溯源？离线文档到在线回答这条链路上，哪些环节决定 RAG 的质量上限？工程上如何在延迟、召回、忠实度之间做权衡？
 
@@ -155,7 +166,7 @@ Claude 3.5 / Gemini 1.5 / GPT-4o 已经支持 100K–2M token 上下文，那 RA
 2. **延迟**：1M token 的预填充（prefill）在 A100 上需要 30–60s；RAG 全链路通常小于 1 秒。
 3. **Lost-in-the-Middle**：Liu et al. 2023ost in the Middle"）实测发现，相关文档放在 context 中间位置时，模型准确率从–75% 跌到–53%，**信息位置决定生成质量**——这是架构性的位置偏置。RAG 通过检索 + rerank + top-k 拼接，天然让相关 chunk 排在首尾两侧。
 
-后文 §8.8.4 会定量比较"塞进 1M context" vs "RAG 取 20 个 chunk"在成本、延迟、忠实度上的差异。
+后文 §8.9.4 会定量比较"塞进 1M context" vs "RAG 取 20 个 chunk"在成本、延迟、忠实度上的差异。
 
 ### 8.2 文档解析
 
@@ -813,32 +824,21 @@ Self-RAG 的代价：要训一个带 reflection token 的模型；开源版本�
 
 **比 Self-RAG 轻**：用现成 LLM 评分 prompt 即可实现 reflection，不需要训新模型。
 
-#### 8.7.8 GraphRAG（Microsoft 2024）
+#### 8.7.8 图 RAG（GraphRAG / LightRAG / LazyGraphRAG）
 
-Edge et al. 2024, "From Local to Global: A Graph RAG Approach to Query-Focused Summarization"。**全局查询的杀手锏**——比如"本公司所有产品中前五大客户是谁"，传统向量 RAG 召回 N 个 chunk 也答不全。
+前面七种方法都在**同一个假设**下打转：知识以「离散的文本块」存储，检索就是找语义最相近的 Top-K。这个假设有三个结构性缺陷（多跳推理干不了、全局性问题答不上、切块摧毁实体关系），**靠调 Query 是修不好的**。
 
-**核心思路**：
+图 RAG 换了个思路：把知识存成**图**（实体为节点、关系为边），检索从「找相似文本」升级成「沿关系遍历 + 全局归纳」。
 
-1. **离线索引**：
-   - 用 LLM 从每个 chunk 抽 **实体 + 关系**（entity-relation extraction）；
-   - 构建知识图谱（实体为节点，关系为边）；
-   - 用 Leiden 算法做**社区检测**（community detection）；
-   - 用 LLM 对每个社区生成**摘要**（community summary / report）。
+一句话定位三兄弟：
 
-2. **在线查询**：
-   - **Local Search**：从 query 出发找相关实体，扩展邻域 → 适合"X 是什么 / 跟 Y 关系"。
-   - **Global Search**：从所有社区摘要走 Map-Reduce —— 每个社区摘要生成"部分答案 + 重要性分"，再 reduce 出总答案。**适合"数据中前 N 大 / 跨文档主题 / 时间趋势"**。
+| 方案 | 一句话 | 索引成本 |
+|---|---|---|
+| **GraphRAG**（Microsoft 2024） | LLM 抽实体 + Leiden 社区 + 社区摘要，全局查询最强但索引最贵 | 最高 |
+| **LazyGraphRAG**（Microsoft 2024-11） | 索引用 NLP 不用 LLM，把 LLM 全延后到查询时 | = 向量 RAG（GraphRAG 的 0.1%） |
+| **LightRAG**（HKUDS 2024） | 图索引 + 双层检索 + 增量更新，成本与质量的平衡点 | 中等 |
 
-**代价**：
-
-- 索引阶段两次 LLM pass（实体抽取 + 社区摘要），**对 1M token 语料用 GPT-4-turbo 大约 281 分钟 + 数百到上千美元**；
-- 增量更新：图结构变化时必须重新检测社区。
-
-**LazyGraphRAG**（Microsoft, 2024-11）：用 NLP（noun phrase）替代 LLM 做实体抽取、把摘要延后到查询时——**索引成本 = 向量 RAG，全局查询质量 = GraphRAG 99%、查询成本仅 4%**。是当前更工程化的选择。
-
-**LightRAG**（Guo et al. 2024, HKUDS, arXiv:2410.05779）：图结构 + 双层（low-level / high-level）检索 + 增量更新。**比 GraphRAG 轻 2–5×**，适合中小规模知识库。
-
-![rag_graphrag_pipeline](../images/rag_graphrag_pipeline.png)
+> 三者都不是「Query 侧」的小改動，而是**替换整个索引层**，所以单开一节讲透——**完整拆解见 §8.8**。选型速查见 §8.7.9 与 §8.8.8。
 
 #### 8.7.9 各方法选型速查
 
@@ -849,15 +849,464 @@ Edge et al. 2024, "From Local to Global: A Graph RAG Approach to Query-Focused S
 | 用户 query 残缺 / 口语 | Query Rewrite |
 | 多跳推理 | 子查询分解 + ReAct |
 | 单一答案找不到 | Step-Back |
-| 全局主题 / 跨文档汇总 | GraphRAG / LazyGraphRAG |
+| 全局主题 / 跨文档汇总 | GraphRAG / LazyGraphRAG（**见 §8.8.8**） |
 | 严格事实 / 高合规 | Self-RAG / CRAG |
-| 实体关系密集（如招投标、企业） | LightRAG |
+| 实体关系密集（如招投标、企业） | LightRAG（**见 §8.8.6**） |
+| 高频更新 / 语料天天变 | LazyGraphRAG / LightRAG（**见 §8.8.8**） |
 
-### 8.8 Agentic RAG
+> 表中后三项属于**图 RAG**，需要替换索引层而非只改 Query 侧，完整拆解与成本基准见 §8.8。
+
+### 8.8 知识图谱与图 RAG
+
+这一节回答一个问题：**当"找语义最相近的文本块"这条路走不通时，知识该以什么形式存储、检索又该怎么做**。
+
+图 RAG 不是 Query 侧的又一个 trick，而是**替换整个索引层**的架构选择。所以它的代价结构、适用边界、失败模式都和普通 RAG 优化完全不同——这也是面试里最容易露馅的地方：很多人能背出"GraphRAG 用知识图谱"，但说不清**什么时候它不值得上**。
+
+#### 8.8.1 向量 RAG 的三个结构性缺陷
+
+先说清楚图 RAG 要解决什么。以下三个问题**不是调参能修的**，它们都源于同一个根因：**向量检索做的是"找相似文本"，而业务要的是"理解实体关系"**。
+
+**缺陷一：多跳推理干不了（没有交集运算）**
+
+跨国风控场景的真实问题：
+
+> "我们公司哪些欧洲供应商，在过去一年的安全审计中没通过，而且还在处理个人隐私数据（PII）？"
+
+要答对，必须同时拿到三份文档的信息并取交集：供应商档案（哪些是欧洲的）、审计报告（哪些没通过）、合同文档（哪些处理 PII）。向量检索会分别召回提到"欧洲供应商""安全审计""PII"的三堆 chunk，但**没有任何机制做集合交集**，只能一股脑塞给模型，让模型自己去对。
+
+这类 `A → B → C` 的链式推理叫**多跳推理（multi-hop reasoning）**。经典例子是"爱因斯坦的导师的导师是谁"——信息分散在不同文档，一次检索根本串不起来。
+
+**缺陷二：全局性问题答不上（这不是检索任务）**
+
+> "这本小说的主题思想是什么？"
+> "这份年报里公司战略发生了哪些变化？"
+> "这批技术文档主要讨论哪几个方向？"
+
+这些问题的答案**不在任何一个文本块里**，需要通读全部语料再归纳。向量检索只会找 Top-K 最像问题的块——可哪块文本会写着"本书主题思想是 XXX"呢？
+
+微软在 GraphRAG 论文里把这类问题定义为 **Query-Focused Summarization（查询聚焦摘要）**。注意定性：**它本质上是归纳任务，不是检索任务**，Top-K 机制天生处理不了。
+
+**缺陷三：切块摧毁实体关系（语义断裂）**
+
+原文写的是"卡托普利属于 ACEI 类药物，但严重肾功能不全者禁用"。按字符数切块后，"卡托普利是 ACEI"在一个块，"严重肾功能不全者禁用"在另一个块。
+
+问"高血压合并糖尿病患者首选哪几种 ACEI？禁忌症是什么？"——两个块都被召回，模型看到这里有"卡托普利"、那里有"禁用"，可能就答出"卡托普利属于禁忌症药物"。
+
+**因果链被切块这一步毁了**。模型拿到的是一堆碎片化的事实，事实之间的逻辑链条没了。
+
+> **一句话总结根因**：向量检索在"找长得像的句子"上很强，但它没有机制表达"这两个实体是什么关系""这条信息和那条信息有没有因果链"。
+
+#### 8.8.2 知识图谱基础
+
+在讲图 RAG 之前，先把知识图谱本身的概念补齐——**这是全站此前的空白区**。
+
+**三元组（Triple）**：知识图谱的最小单位，形式是 `(头实体, 关系, 尾实体)`，也写作 `(h, r, t)`：
+
+```
+(张三, 创立, A公司)
+(李四, 任职CTO, A公司)
+(A公司, 主营, 自动驾驶)
+```
+
+**本体 / Schema**：规定"这个领域里允许有哪些实体类型、哪些关系类型"。它是图谱的**数据模型**，相当于关系数据库的表结构。
+
+| 概念 | 作用 | 例子 |
+|---|---|---|
+| 实体类型 Entity Type | 节点的分类 | `Person` / `Organization` / `Product` / `Event` |
+| 关系类型 Relation Type | 边的分类 | `FOUNDED` / `WORKS_AT` / `SUPPLIES_TO` |
+| 属性 Property | 节点或边上的键值对 | `{name: "A公司", 成立年份: 2025}` |
+| 约束 Constraint | 关系两端允许的类型 | `FOUNDED` 只能从 `Person` 指向 `Organization` |
+
+有本体的图谱叫**模式化（schema-based）**，抽取准确率高、可控，但前期要人工设计；无本体的叫**开放抽取（Open IE）**，自动化程度高但噪声大。**GraphRAG 默认走开放抽取**，这也是它索引贵又不稳定的主因之一。
+
+**两种数据模型**：
+
+| 模型 | 标准 | 结构 | 代表产品 |
+|---|---|---|---|
+| **属性图 Property Graph** | 无统一标准（事实标准是 Neo4j） | 节点/边都可带属性，最贴近工程直觉 | Neo4j、NebulaGraph、TigerGraph、JanusGraph |
+| **RDF 图** | W3C 标准（RDF / OWL / SPARQL） | 严格三元组，支持推理与本体约束 | Apache Jena、Virtuoso、GraphDB |
+
+**工业界 90% 的图 RAG 用属性图**，因为图 RAG 要的是"高效遍历与子图召回"，不是"本体推理"。RDF/OWL 那套推理机在图 RAG 场景基本用不上。
+
+**主流图存储选型**：
+
+| 产品 | 查询语言 | 特点 | 适合 |
+|---|---|---|---|
+| **Neo4j** | Cypher | 生态最全、LangChain/LlamaIndex 集成最好、社区版免费 | 中小规模起步，生态优先 |
+| **NebulaGraph** | nGQL | 国产、分布式水平扩展、开源 | 超大规模（百亿边）、国产化要求 |
+| **TigerGraph** | GSQL | 图计算能力强、支持并行图算法 | 需要跑复杂图算法（如 Leiden） |
+| **JanusGraph** | Gremlin | 开源、后端可插拔（HBase/Cassandra） | 已有大数据栈，想复用存储 |
+| **Amazon Neptune** | Gremlin / openCypher | 全托管、免运维 | 不想自己运维图库 |
+| **ArangoDB** | AQL | 多模型（文档+图+KV） | 一份数据既要文档查询又要图遍历 |
+
+**Cypher 入门**（Neo4j 的查询语言，面试常考是否会写）：
+
+```cypher
+// 创建节点与关系
+CREATE (p:Person {name: '张三'})
+CREATE (c:Organization {name: 'A公司', founded: 2025})
+CREATE (p)-[:FOUNDED]->(c)
+
+// 一跳查询：谁创立了 A 公司
+MATCH (p:Person)-[:FOUNDED]->(c:Organization {name: 'A公司'})
+RETURN p.name
+
+// 两跳查询（多跳推理的核心）：A 公司 CTO 还关联了哪些公司
+MATCH (a:Organization {name: 'A公司'})<-[:WORKS_AT]-(p:Person)
+      -[:WORKS_AT]->(other:Organization)
+WHERE other.name <> 'A公司'
+RETURN p.name, other.name
+
+// 可变长度路径：1 到 3 跳内的所有关联实体
+MATCH (a:Organization {name: 'A公司'})-[r*1..3]-(n)
+RETURN DISTINCT labels(n) AS type, n.name
+```
+
+> 注意 `[r*1..3]` 这种**可变长度路径查询**——这正是向量检索做不到、而图原生支持的多跳能力。图 RAG 的多跳优势本质上来自这里。
+
+#### 8.8.3 图谱构建流水线
+
+从文档到可用图谱，四步：
+
+```
+[原始文档]
+    ↓ ① 切块（同 §8.3）
+[Text Chunk]
+    ↓ ② LLM 抽取实体 + 关系（Entity & Relation Extraction）
+[候选三元组]
+    ↓ ③ 实体消歧与对齐（Entity Resolution）
+[规范化图谱]
+    ↓ ④ 写入图存储 + 增量更新
+[可查询的知识图谱]
+```
+
+**② 实体与关系抽取**
+
+用 Prompt 让 LLM 从每个 chunk 抽结构化结果（GraphRAG 的简化版 prompt）：
+
+```json
+{
+  "entities": [
+    {"name": "卡托普利", "type": "DRUG", "description": "ACEI 类降压药"},
+    {"name": "ACEI", "type": "DRUG_CLASS"}
+  ],
+  "relationships": [
+    {"source": "卡托普利", "target": "ACEI", "relation": "BELONGS_TO", "weight": 9}
+  ]
+}
+```
+
+**抽取质量直接决定图 RAG 的上限**——这一步的噪声会一路放大到社区检测和最终答案。微软自评：**图抽取约占 GraphRAG 索引成本的 75%**，所以要降本，第一刀就该砍在这里（LazyGraphRAG 正是这么做的）。
+
+**③ 实体消歧与对齐（最容易翻车的一步）**
+
+同一实体在不同文档里写法不同：`Google` / `Alphabet` / `GOOGL` / `谷歌`。不做消歧，图里就是四个孤立节点，多跳推理直接失效。
+
+工程上的处理手段：
+
+- **归一化**：小写化、去法律后缀（`Inc.` / `Ltd.` / `有限公司`）、全半角统一
+- **外链对齐**：对接 Wikidata / 行业词表，把别名映射到 canonical ID
+- **向量聚类**：用名称 + 描述的 embedding 做相似度聚类，阈值以上合并
+- **LLM 裁决**：边界 case 交给 LLM 判断（贵，只用在聚类不确定的样本上）
+
+**④ 增量更新（生产环境的必答题）**
+
+文档会改。如果对修改后的文档重新抽取，旧实体可能变成孤儿节点。推荐做法是 **`MERGE` + 软删除**，而不是物理删除：
+
+```cypher
+// 用 MERGE 保证幂等，重复导入不会产生重复节点
+MERGE (e:Entity {id: $canonical_id})
+SET e.name = $name, e.stale = false, e.updated_at = datetime()
+
+// 标记旧实体为 stale，而不是直接删（保留历史可追溯）
+MATCH (e:Entity {doc_id: $old_doc}) SET e.stale = true
+```
+
+查询时过滤：
+
+```cypher
+MATCH (e:Entity) WHERE e.stale = false
+RETURN e
+```
+
+**覆盖率监控**（这是判断抽取管线是否健康的头号指标）：
+
+```cypher
+MATCH (q:QueryLog)
+WHERE q.timestamp > datetime() - duration({days: 7})
+RETURN q.resolved_entities * 1.0 / q.total_entities AS coverage_rate
+```
+
+> **经验阈值**：query 中的实体能解析到图节点的比例**低于 80%**，说明抽取管线漏掉太多实体，检索质量必然崩。这个指标要当成线上 SLA 来盯。
+
+#### 8.8.4 GraphRAG 深度拆解（Microsoft, Edge et al. 2024）
+
+论文：*"From Local to Global: A Graph RAG Approach to Query-Focused Summarization"*。
+
+一句话：**用 LLM 把文档"读成一张知识图谱"，再基于这张图谱做检索和回答**。
+
+**索引阶段：五步离线建图**
+
+```
+① 文档切块（1200 token / chunk）
+        ↓
+② LLM 抽实体 + 关系（每个 chunk 独立并发处理）
+        ↓
+③ LLM 合并同一实体的多次描述（第二次 LLM pass）
+        ↓
+④ 图统计优化 + Leiden 层次化社区检测
+        ↓
+⑤ LLM 为每个社区生成社区报告（Community Report）
+```
+
+第 ④ 步的 **Leiden 算法**是关键。它把整张图按"关系紧密程度"划分成若干**社区**，且在**多个分辨率层级**上都产出划分结果。
+
+类比《三国演义》：刘关张是一个小社区，曹操集团是一个社区，诸葛亮周边人物又是一个社区——**社区内部关系紧密，社区之间连接稀疏**。
+
+第 ⑤ 步为**每个层级的每个社区**都生成一份报告。这意味着：**在任何人提问之前，语料"整体上在说什么"的摘要就已经存在了**。这正是全局查询能答上来的根本原因。
+
+**查询阶段：两种模式**
+
+| 模式 | 机制 | 适合 | 成本 |
+|---|---|---|---|
+| **Local Search** | 从 query 匹配到的实体出发，扩展邻域，把实体/关系/社区报告/原始文本排序后拼进一个上下文窗口 | "X 是什么""X 和 Y 什么关系" | 低 |
+| **Global Search** | 对所有社区报告做 **Map-Reduce**：每个社区报告独立生成"部分答案 + 重要性分"（Map），再汇总成总答案（Reduce） | "数据中前 N 大""跨文档主题""时间趋势" | 高 |
+
+![rag_graphrag_pipeline](../images/rag_graphrag_pipeline.png)
+
+**成本基准（必须记住的量级）**
+
+| 项目 | 数量级 |
+|---|---|
+| 索引：1M token 语料用 GPT-4-turbo | 约 281 分钟 + 数百到上千美元 |
+| 图抽取占索引成本 | 约 **75%** |
+| 检索（Legal 数据集，94 篇文档） | 1399 个社区，其中 610 个参与检索，每份报告约 1000 token → **约 61 万 token + 数百次 API 调用** |
+| 增量更新（同规模新数据） | 需拆掉现有社区结构重建，1399 个社区 × 约 5000 token → **约 1400 万 token** |
+
+**收益基准**：
+
+- 大规模语料上的宽泛分析类查询，准确率从约 **50% 提升到 80%**；
+- 涉及**超过 5 个实体**的查询，向量 RAG 准确率急剧下降，GraphRAG 保持稳定；
+- 多跳问答（如 HotpotQA）F1 比传统 RAG **高 5% 以上**。
+
+**⚠️ 一个必须说清的边界**：GraphRAG 的优势体现在**全面性（comprehensiveness）、多样性（diversity）、可溯源性**上，而在**忠实度（faithfulness）上与基线 RAG 持平**。
+
+也就是说：**图 RAG 让答案覆盖得更全、引用更清楚，但没有证据表明它让单条陈述的事实准确率更高**。面试官问"GraphRAG 能不能减少幻觉"时，标准答案是**"改善覆盖与溯源，不等于改善逐条事实准确性"**——答"能减少幻觉"就掉坑里了。
+
+#### 8.8.5 LazyGraphRAG：把 LLM 延后到查询时
+
+Microsoft Research 2024-11-25 发布，作者还是 GraphRAG 原班人马（Darren Edge、Ha Trinh、Jonathan Larson）。
+
+**动机**：GraphRAG 昂贵的部分（LLM 实体抽取 + LLM 社区摘要）**全部发生在索引期**。如果你的语料只打算查几十次，先付全额索引费显然不划算。
+
+**做法**：把这两步从索引期拿掉，所有 LLM 调用延后到查询时。
+
+| 环节 | GraphRAG | LazyGraphRAG |
+|---|---|---|
+| 建索引 | LLM 抽实体与关系 → LLM 合并描述 → 图统计 + 层次社区 | **NLP 名词短语**抽概念与共现 → 图统计 + 层次社区（**全程无 LLM**） |
+| 摘要索引 | LLM 为每个社区生成报告 | **无**（"lazy" 就懒在这里） |
+| 改写 Query | 无，原 query 走到底 | LLM 生成 **3–5 个子查询**并合并成扩展 query，用图上概念修正 |
+| 匹配 | 无（所有社区报告都参与，广度优先） | 每个子查询：向量相似度排文本块 → 按 top-k 块排名聚合出社区排名（最佳优先）→ LLM 句子级相关性打分（广度优先）→ 连续 z 个社区无相关内容则**递归进入子社区**（迭代加深）→ 相关性测试预算耗尽或无可查社区时终止 |
+| 生成答案 | LLM 对随机批次的社区报告并行作答后汇总 | 从相关文本块抽 claim → 按社区分组 → 排序裁剪进上下文 → 生成 |
+
+**核心机制叫"迭代加深（iterative deepening）"**：把最佳优先（best-first，靠向量相似度快速命中）和广度优先（breadth-first，靠社区结构保证覆盖面）两种遍历动态结合起来，把宝贵的 LLM 调用集中在图上最可能有信息的部位。
+
+**只有一个旋钮**：**相关性测试预算（relevance test budget）**，统一控制成本-质量权衡。
+
+**官方评测**（5,590 篇 AP 新闻文章，100 条合成 query，50 条 local + 50 条 global）：
+
+| 配置 | 预算 | 结果 |
+|---|---|---|
+| **Z500** | 500 | 在 local 与 global 两类查询上**显著优于全部 8 个对照条件**（含纯向量 RAG、RAPTOR、GraphRAG Global Search、DRIFT），而查询成本仅为 GraphRAG Global Search 的 **4%** |
+| **Z100_Lite** | 100 | 以极低成本达到或超过多数基线 |
+
+另一个数字：与 GraphRAG Global Search 质量相当时，查询成本低 **700 倍以上**。
+
+**代价（必须说清）**：由于社区报告没有预计算，LazyGraphRAG **每次查询的 LLM 调用更多、单次查询更慢**，且每查询成本随预算上升。
+
+**所以微软自己也不建议所有场景都上 LazyGraphRAG**，理由是：预构建的实体、关系、社区报告除了问答之外还有独立价值——**人会直接读这些报告**。
+
+> **选型判据**：**查询量大、语料稳定** → 全额索引能被摊薄，标准 GraphRAG 更经济；**查询稀疏、语料频繁变动、预算敏感** → LazyGraphRAG。
+
+> **落地状态（2025-06 更新）**：LazyGraphRAG 已集成进 **Microsoft Discovery**（基于 Azure 的科研 agentic 平台）与 **Azure Local** 服务（公开预览）。
+
+#### 8.8.6 LightRAG：图索引 + 双层检索 + 增量更新
+
+Guo et al. 2024，港大 HKUDS，arXiv:2410.05779。定位是**成本与质量的平衡点**。
+
+**基于图的文本索引（四步）**
+
+| 步骤 | 做什么 | 为什么 |
+|---|---|---|
+| ① **实体与关系抽取** | LLM 从文本块识别实体及其关系 | 拿到图的骨架，捕捉细粒度语义 |
+| ② **LLM 增强的键值对生成** | 为每个实体节点和关系边生成 `key-value`：key 是单词或短短语（便于检索），value 是总结性文本段落（用于生成） | **实体用名称作唯一 key；关系由 LLM 生成反映全局主题的一个或多个 key** |
+| ③ **去重与合并** | 识别并合并不同片段中重复/高度相似的实体与关系 | 缩小图规模，降低图操作开销 |
+| ④ **增量更新** | 新文档走同样的 ①→③，然后对**节点集与边集分别取并集** | 无需重建全图 |
+
+第 ② 步是 LightRAG 的巧思：检索键让系统既能做快速索引匹配，又能拿到丰富语义。关系的键由 LLM 生成，包含来自两端实体的**全局主题**——这是高层检索能匹配抽象概念的基础。
+
+**双层检索范式**
+
+先理解它要解决什么：RAG 的查询天然分两类。
+
+| 查询类型 | 特征 | 例子 |
+|---|---|---|
+| **特定查询 Specific** | 面向细节，指向图中具体实体 | "《傲慢与偏见》的作者是谁？" |
+| **抽象查询 Abstract** | 面向概念，涉及主题、综述，不指向具体实体 | "人工智能如何影响现代教育？" |
+
+对应两种检索策略：
+
+- **Low-Level Retrieval（低层检索）**：聚焦**具体实体**及其属性/关系，抽取关于特定节点或边的精确信息。
+- **High-Level Retrieval（高层检索）**：聚合**多个相关实体与关系**的信息，提供更高层概念与总结的洞察。
+
+**图 + 向量融合的检索三步**：
+
+```
+[Query]
+   ↓ (i) LLM 提取局部关键词 k⁽ˡ⁾ + 全局关键词 k⁽ᵍ⁾
+[两类关键词]
+   ↓ (ii) 向量库匹配：局部词 → 候选实体；全局词 → 关联到全局键的关系
+[候选实体 + 关系]
+   ↓ (iii) 收集局部子图的一跳邻居节点，补充高阶关联
+[实体 + 关系 + 原始文本 → LLM]
+```
+
+第 (iii) 步的形式化表达：收集检索到的节点 `v` 与边 `e` 的一跳邻居集合
+
+$$
+N = \{\, v_i \mid v_i \in \mathcal{V} \ \wedge\ (v_i \in \mathcal{N}_v \ \vee\ v_i \in \mathcal{N}_e) \,\}
+$$
+
+其中 `N_v`、`N_e` 分别是被检索到的节点与边的一跳邻居。
+
+**实验数据**（UltraDomain 四个数据集，chunk = 1200 token，LLM = GPT-4o-mini）：
+
+| 数据集 | 文档数 | token 数 |
+|---|---|---|
+| Agriculture | 12 | 2,017,886 |
+| CS | 10 | 2,306,535 |
+| **Legal** | 94 | **5,081,069** |
+| Mix | 61 | 619,009 |
+
+每个数据集生成 125 个问题（5 个虚拟用户 × 5 个任务 × 5 个问题），用 GPT-4o-mini 盲审排名，评估**全面性、多样性、赋能性、总体表现**四个维度。
+
+**对比 Naive RAG 的胜率**（Agriculture 数据集）：
+
+| 维度 | Naive RAG | LightRAG |
+|---|---|---|
+| 全面性 | 32.69% | **67.31%** |
+| 多样性 | 24.09% | **75.91%** |
+
+**消融实验（这组数据最有说服力）**：
+
+| 变体 | 效果 |
+|---|---|
+| 去掉高层检索（-High） | Agriculture 全面性胜率从 67.31% **暴跌到 35.79%** |
+| 去掉低层检索（-Low） | Agriculture 多样性胜率从 75.91% **跌到 35.09%** |
+| 去掉原始文本（-Origin） | 四个数据集**性能未显著下降**，个别还提升 |
+
+前两行证明：**双层检索缺一不可，单用任何一层都会腰斩**。
+
+第三行更有意思：去掉原始文本反而没变差，说明**基于图的索引已经把关键信息提取干净了**，原始文本里的冗余内容反而可能干扰检索。
+
+**成本对比（Legal 数据集，这部分是选型关键）**：
+
+| 阶段 | GraphRAG | LightRAG |
+|---|---|---|
+| 检索 | 1399 个社区，610 个参与，每份报告约 1000 token → **约 61 万 token + 数百次 API 调用** | **不到 100 token 用于关键词生成与检索，全程 1 次 API 调用** |
+| 增量更新（同规模新数据） | 需拆掉社区结构重建，1399 × 约 5000 token → **约 1400 万 token** | 直接把新抽取的实体与关系并入现有图 |
+
+#### 8.8.7 图 + 向量混合检索
+
+工业界的共识不是"图取代向量"，而是**混合**：
+
+```
+                    ┌─────────────────┐
+   [Query] ────────▶│  意图路由 Router │
+                    └────────┬────────┘
+                 ┌───────────┴───────────┐
+                 ▼                       ▼
+        [向量检索 top-K]          [图遍历 / 子图召回]
+        "找长得像的文本块"          "顺藤摸瓜找关系"
+                 └───────────┬───────────┘
+                             ▼
+                  [RRF 倒数排序融合]（见 §8.6.3）
+                             ▼
+                     [Rerank 重排]（见 §8.6.4）
+                             ▼
+                        [LLM 生成]
+```
+
+**为什么要保留向量检索**：微软自己的评测也承认，**Local 查询上向量 RAG 反而更强**——因为这类问题的答案和问法高度相似，且集中在文本的特定区域，最近邻检索天然对口。
+
+**RRF 融合公式**（已在 §8.6.3 讲过，这里给它在图场景下的用法）：
+
+$$
+\mathrm{RRF\_score}(d) = \sum_{r \in R} \frac{1}{k + \mathrm{rank}_r(d)}
+$$
+
+其中 `R` 是各路召回结果的集合（向量路、图路），`rank_r(d)` 是文档 `d` 在第 `r` 路中的排名，`k` 通常取 **60**。它的价值在于**不需要归一化**——向量相似度分数和图遍历的排名分数量纲完全不同，RRF 只用名次就绕开了这个问题。
+
+**工程建议**：
+
+- **路由层用 LLM 分类** query 类型（事实型 → 向量；关系型/全局型 → 图），这是 Agentic RAG 的典型落法（见 §8.9）；
+- **混合检索的 chunk 要有 10–15% 重叠**，避免实体提及被切块边界切断；
+- **实体抽取要在整篇文档上跑，而不是逐 chunk 跑**，才能捕捉跨 chunk 的关系。
+
+#### 8.8.8 选型速查与成本基准
+
+**三方案横评**：
+
+| 维度 | 向量 RAG | GraphRAG | LazyGraphRAG | LightRAG |
+|---|---|---|---|---|
+| 索引结构 | 稠密向量 | 图 + 社区层次 + 向量 | 概念共现图 + 向量 | 图 + 向量 |
+| **索引成本** | 低 | **高**（大量 LLM 调用） | **≈ 向量 RAG（GraphRAG 的 0.1%）** | 中 |
+| **单次查询成本** | 低 | 低（报告已预计算） | 中高（随预算上升） | **极低（Legal 上 <100 token / 1 次调用）** |
+| Local 实体查询 | **强** | 强 | 强 | 强 |
+| Global 全局查询 | **弱** | **强** | **强**（Z500 超全部对照） | 中强（高层检索） |
+| 多跳推理 | 弱 | 强 | 强 | 强（一跳邻居扩展） |
+| 增量更新 | 容易（重嵌改动块） | **昂贵（重建社区）** | 容易（图无 LLM 产物） | **容易（节点/边集取并集）** |
+| 单查询延迟 | 低 | 中 | **中高（LLM 调用多）** | 低 |
+| 成熟度 | ★★★★★ | ★★★★ | ★★★（已集成进 MS 产品） | ★★★ |
+
+**场景 → 方案**：
+
+| 你的场景 | 推荐 | 理由 |
+|---|---|---|
+| 简单事实问答、客服 FAQ | **向量 RAG** | 图 RAG 是过度设计，向量在这类查询上本来就更强 |
+| 跨文档主题归纳、年度盘点、趋势分析 | **GraphRAG**（查询量大）/ **LazyGraphRAG**（查询稀疏） | 全局查询是图 RAG 的杀手锏 |
+| 实体关系密集（招投标、企业关系、医疗知识） | **LightRAG** | 双层检索 + 增量更新，成本质量平衡最好 |
+| 高频更新（新闻、证券、监控） | **LazyGraphRAG / LightRAG** | GraphRAG 重建社区的成本扛不住 |
+| 强合规、需要可审计溯源 | **GraphRAG / LightRAG** | 图结构本身可解释，引用精确到实体与关系 |
+| 预算敏感、先验证效果 | **LazyGraphRAG** | 索引成本等于向量 RAG，试错成本最低 |
+
+**什么时候不该用图 RAG**（面试高频反向提问）：
+
+- 只回答简单事实型问题 —— 杀鸡用牛刀；
+- 文档**没有关系结构**（如纯日志、流水账）—— 抽不出有意义的关系；
+- **延迟是首要约束** —— 图遍历有额外开销；
+- **语料能整个塞进上下文窗口** —— 直接长上下文更简单（见 §8.9.4）。
+
+#### 8.8.9 图 RAG 的失败模式与排查
+
+工程落地时真正会咬人的坑：
+
+| 症状 | 根因 | 排查手段 |
+|---|---|---|
+| 答案质量还不如向量 RAG | query 里的实体没解析到图节点 | 查覆盖率指标（§8.8.3 的 Cypher），**低于 80% 就是抽取管线的问题** |
+| 同一个实体在图里分裂成多个节点 | 实体消歧没做或规则太弱 | 检查归一化规则（大小写、法律后缀、全半角） |
+| 索引跑了几小时还没完 | 图抽取占 75% 成本 | 换更小的抽取模型；或改 LazyGraphRAG 用 NLP 抽概念 |
+| 加了新文档后答案变差 | 增量更新产生孤儿节点 | 用 `MERGE` + `stale` 软删除（§8.8.3），别物理删除 |
+| 全局查询答非所问 | 社区粒度不对 | 调整 Leiden 层级；GraphRAG 推荐用 **C2**（第三层） |
+| 成本高得离谱 | 用了 Global Search 回答本该 Local 的问题 | 加意图路由；生产默认走 Local，只在明显是主题性问题时才降级到 Global |
+
+> **一句工程口诀**：**生产环境默认走 Local Search，只在 query 明显是主题性/全局性时才回退到 Global**。绝大多数线上成本事故，都源于把 Global Search 当成了默认选项。
+
+### 8.9 Agentic RAG
 
 Agentic RAG（代理式 RAG）= 把 RAG 从固定 pipeline 变成**由 LLM 驱动的 agent**：自己决定检索什么、用哪个索引、查几次、怎么组合。
 
-#### 8.8.1 从 Pipeline 到 Agent
+#### 8.9.1 从 Pipeline 到 Agent
 
 传统 RAG 是直线：query → retriever → rerank → LLM。**真实用户的问题常常需要**：
 
@@ -881,7 +1330,7 @@ Agent 把这些决策交给 LLM：
 [最终答案]
 ```
 
-#### 8.8.2 ReAct 在 RAG 中的落法
+#### 8.9.2 ReAct 在 RAG 中的落法
 
 ReAct（Reason + Act, Yao et al. 2022）让 LLM 显式输出"思考 + 工具调用 + 观察"的循环：
 
@@ -904,7 +1353,7 @@ Action 3:  Answer(...)
 - **Token 预算**：每步都要把历史塞回 context，4 步后接近 8K+；
 - **工具描述质量**：工具清单是 prompt 的一部分，**写好工具描述等于 50% 的成功率**。
 
-#### 8.8.3 关键能力清单
+#### 8.9.3 关键能力清单
 
 Agentic RAG 需要的不只是 LLM 聪明：
 
@@ -917,7 +1366,7 @@ Agentic RAG 需要的不只是 LLM 聪明：
 | **记忆（Memory）** | 多轮对话上下文 | 短期 context + 长期向量库 |
 | **可控性** | 人能干预 | HITL（human-in-the-loop）审批工具调用 |
 
-#### 8.8.4 长上下文能否替代 RAG
+#### 8.9.4 长上下文能否替代 RAG
 
 一句话：**不能，但场景在收窄**。
 
@@ -951,7 +1400,7 @@ Agentic RAG 需要的不只是 LLM 聪明：
 - 200K–1M token → 长上下文做"二阶段粗筛"+ RAG 做"精查"；
 - 超过 1M token、高频更新、强引用需求 → **RAG 仍然是唯一合理选择**。
 
-#### 8.8.5 Agentic RAG 的代价
+#### 8.9.5 Agentic RAG 的代价
 
 - **延迟**：每次 LLM 决策–300–800 ms，多步 1–3 s 起步；
 - **成本**：单次回答 4–10 次 LLM 调用；
@@ -964,13 +1413,13 @@ Agentic RAG 需要的不只是 LLM 聪明：
 - 当 query 类型多、需要外部工具、或者必须做"边查边反思"时，引入 Agentic；
 - 上 Agentic 前先把离线 RAGAS 跑到 0.75+ 再说——baseline 都没立稳就上 agent 是常见踩坑。
 
-### 8.9 RAG 评估体系
+### 8.10 RAG 评估体系
 
 不评估的 RAG 就是在盲调参。**评估体系是 RAG 系统的"测试工程师"**。
 
 ![rag_eval_pipeline](../images/rag_eval_pipeline.png)
 
-#### 8.9.1 评估三件套
+#### 8.10.1 评估三件套
 
 RAG 系统评估有三大类指标：
 
@@ -978,7 +1427,7 @@ RAG 系统评估有三大类指标：
 - **生成侧指标**：Faithfulness、Answer Relevancy——只看 LLM 答得好不好。
 - **端到端指标**：Context Precision、Context Recall、Answer Correctness——综合"检索+生成"。
 
-#### 8.9.2 检索侧指标
+#### 8.10.2 检索侧指标
 
 假设 ground truth 相关文档集合 = `G`，模型召回 top-k 集合 = `R_k`。
 
@@ -993,7 +1442,7 @@ RAG 系统评估有三大类指标：
 
 **RAG 系统里最常用**：Recall@10（端到端）+ NDCG@10（rerank 前后比较）。`Recall@10 大于 0.9` 通常是工程目标。
 
-#### 8.9.3 RAGAS 四大指标
+#### 8.10.3 RAGAS 四大指标
 
 RAGAS（RAG Assessment, Es et al. 2023）= 用 LLM-as-judge 自动评估 RAG 系统的开源框架，**不需要人工标注 ground truth**。核心 4 个指标：
 
@@ -1053,7 +1502,7 @@ $$
 
 **RAGAS 五大指标 = 上述 4 + Answer Correctness**（与 ground truth 答案做 F1 + 语义相似度加权）。
 
-#### 8.9.4 ARES（Automated REE-val System, Saad-Falcon et al. 2024）
+#### 8.10.4 ARES（Automated REE-val System, Saad-Falcon et al. 2024）
 
 RAGAS 依赖 LLM-as-judge，**评估 LLM 的偏见会传递**。ARES 进一步：
 
@@ -1064,7 +1513,7 @@ RAGAS 依赖 LLM-as-judge，**评估 LLM 的偏见会传递**。ARES 进一步�
 
 **适用**：CI/CD 集成大规模回归；不适合早期 prototype。
 
-#### 8.9.5 RGB 基准（Chen et al. 2024）
+#### 8.10.5 RGB 基准（Chen et al. 2024）
 
 RGB（Retrieval-Augmented Generation Benchmark）把 RAG 能力拆成四个维度：
 
@@ -1077,7 +1526,7 @@ RGB（Retrieval-Augmented Generation Benchmark）把 RAG 能力拆成四个维�
 
 **反事实鲁棒性**是 2024 年起新强调的能力——许多模型"嘴上说"会按文档答，但碰到"地球是方的（反事实）"会强行答"对"或"不对"。
 
-#### 8.9.6 CRUD-RAG（Lyons et al. 2024）
+#### 8.10.6 CRUD-RAG（Lyons et al. 2024）
 
 按 CRUD 四象限评估：
 
@@ -1087,7 +1536,7 @@ RGB（Retrieval-Augmented Generation Benchmark）把 RAG 能力拆成四个维�
 
 工程意义：很多 RAG 系统只测了 Read（事实问答），忽略 Update（同一事实多版本）和 Delete（旧版本过滤）。
 
-#### 8.9.7 评测集怎么造
+#### 8.10.7 评测集怎么造
 
 没有 ground truth 时三种方法：
 
@@ -1101,7 +1550,7 @@ RGB（Retrieval-Augmented Generation Benchmark）把 RAG 能力拆成四个维�
 - ground truth 答案要 **cite 到具体 chunk**（不然 Context Recall 算不出来）；
 - 评估时**用与生成不同的 LLM**做 judge（用 Qwen3 当生成、用 GPT-4 当 judge 减少自评偏差）。
 
-### 8.10 工程落地
+### 8.11 工程落地
 
 > **本节结合实际招投标 RAG 知识库项目**（FastAPI + 阿里云百炼 embedding + ES 双索引：文档级检索 + 问答 chunk 索引）。每一条都是项目里踩过或避开的坑。
 
@@ -1109,7 +1558,7 @@ RGB（Retrieval-Augmented Generation Benchmark）把 RAG 能力拆成四个维�
 
 > 上图展示了 RAG 系统的典型工程架构：左侧"离线索引"链路（解析 → chunking → embedding → 入库）和右侧"在线服务"链路（query 理解 → 混合检索 → rerank → 生成）通过 ES 双索引 + Redis 缓存 + LLM 网关衔接。红色为瓶颈点（embedding API、LLM 网关），需要重点限流与重试。
 
-#### 8.10.1 ES 混合索引设计
+#### 8.11.1 ES 混合索引设计
 
 **核心思路**：**两个独立的物理索引，各自管一种检索**。
 
@@ -1224,7 +1673,7 @@ GET /bidding_docs/_search
 
 `rank_window_size` = 每路保留多少候选；`rank_constant` = RRF 的 k。
 
-#### 8.10.2 metadata 过滤与分区
+#### 8.11.2 metadata 过滤与分区
 
 **多租户 + 权限隔离必备**：
 
@@ -1238,7 +1687,7 @@ GET /bidding_docs/_search
 - **共享索引 + tenant filter**：99% 场景选这个；
 - **按时间分索引**（滚动索引 `bidding-2026-08`、`bidding-2026-09`）：适合时间序列数据。
 
-#### 8.10.3 增量更新与索引版本管理
+#### 8.11.3 增量更新与索引版本管理
 
 **三种粒度**：
 
@@ -1264,7 +1713,7 @@ v1 (bge-large-zh-v1.5, 1024d) → v2 (Qwen3-Embedding-0.6B, 1024d)
 
 **关键**：embedding 模型换版**必须全量重算**——维度、归一化、语义空间都可能变，老向量不能直接搬到新模型下。
 
-#### 8.10.4 批量 embedding 的限流与重试
+#### 8.11.4 批量 embedding 的限流与重试
 
 **阿里云百炼 / OpenAI / Cohere** 等云端 embedding API 都有 QPS 限速。生产经验：
 
@@ -1298,7 +1747,7 @@ class EmbeddingClient:
 - 超时：单次请求 30s 上限，3 次失败后落 dead-letter queue，**不要无限重试阻塞流水线**；
 - 进度：写 checkpoint，崩溃后可断点续跑（按 doc_id 已经成功的跳过）。
 
-#### 8.10.5 缓存
+#### 8.11.5 缓存
 
 三层缓存：
 
@@ -1326,7 +1775,7 @@ cache.init(
 
 **风险**：语义缓存可能把"看似相同但实际不同"的 query 错误合并；**阈值要严格 + 加关键词白名单**。
 
-#### 8.10.6 中文场景特有问题
+#### 8.11.6 中文场景特有问题
 
 - **分词**：必须用 IK / HanLP / Jieba；ES 默认 standard analyzer 对中文是逐字切。IK 的 `ik_max_word` 索引 / `ik_smart` 查询组合是事实标准。
 - **专有名词**：招标术语、药名、缩写必须加自定义词表；IK 的 `ext_dict` / `ext_stopwords` 维护。
@@ -1337,7 +1786,7 @@ cache.init(
 - **多音字**："行长"（háng vs háng）——靠上下文 embedding 解决，BM25 可能误召。
 - **全角 / 半角**："（" vs "("、"１" vs "1"——做归一化。
 
-#### 8.10.7 引用溯源与可解释性
+#### 8.11.7 引用溯源与可解释性
 
 合规场景（金融、医疗、法律、招投标）的**强需求**。每条 chunk 必须能反查回原文档。
 
@@ -1366,7 +1815,7 @@ cache.init(
 
 **Anthropic Contextual Retrieval**（2024-09）报告：**Contextual Embeddings 让 top-20 失败率从 5.7% 降到 3.7%（降 35%）；加 Contextual BM25 降到 2.9%（49%）；再加 Rerank 降到 1.9%（67%）**。代价：每个 chunk 多一次 LLM 推理，但配合 prompt caching 成本可控制在 **$1.02 / 百万文档 token**（数据来源：anthropic.com/engineering/contextual-retrieval）。
 
-#### 8.10.8 监控指标
+#### 8.11.8 监控指标
 
 上线后必看的运行时指标：
 
@@ -1384,7 +1833,7 @@ cache.init(
 | **Token 单次平均** | 小于 2K | 大于 5K |
 | **embedding API 429 比例** | 小于 0.5% | 大于 5% |
 
-#### 8.10.9 性能与成本基准（2025 年典型）
+#### 8.11.9 性能与成本基准（2025 年典型）
 
 | 规模 | 文档数 | chunk 数 | 索引存储 | 单次检索成本 | 单次回答成本 |
 |---|---|---|---|---|---|
@@ -1393,7 +1842,7 @@ cache.init(
 | 大 | 10M | 100M |–1 TB（+ 量化） | 0.005–0.02 美元 | 0.05–0.3 美元 |
 | 超大 | 1B+ | 10B+ | 数十 TB 与 IVF-PQ | 0.02 美元以上 | 走专用硬件 |
 
-### 8.11 高频面试题
+### 8.12 高频面试题
 
 > 25+ 题，每题 3–8 行答案。面试按重要性选背。
 
@@ -1464,7 +1913,7 @@ A. Bi-Encoder 分别编码后做点积，**信息瓶颈在两段向量拼接处*
 A. `[Retrieve]`（是否需要检索，yes/no/continue）、`[IsRel]`（检索段是否相关，relevant/irrelevant）、`[IsSup]`（生成内容是否被上下文支持，fully/partially/no）、`[IsUse]`（整体有用性，1–5）。
 
 **Q23. GraphRAG 解决什么问题？代价是什么？**
-A. 解决"跨文档主题 / 全局汇总"（如"前 5 大客户是谁"传统向量 RAG 答不全）。代价：**索引阶段两次 LLM pass + 社区摘要**，百万 token 语料用 GPT-4 数百到上千美元。**LazyGraphRAG** 把成本压到向量 RAG 同级（**0.1%**），适合中小规模。
+A. 解决"跨文档主题 / 全局汇总"（如"前 5 大客户是谁"传统向量 RAG 答不全）。代价：**索引阶段两次 LLM pass + 社区摘要**，百万 token 语料用 GPT-4 数百到上千美元（图抽取占索引成本约 **75%**）。**LazyGraphRAG** 把索引成本压到向量 RAG 同级（**0.1%**），**LightRAG** 用增量更新避免重建全图。三者完整对比见 §8.8，选型基准见 §8.8.8，幻觉边界见 Q34。
 
 **Q24. Lost in the Middle 现象是什么？**
 A. Liu 2023。LLM 对 context 中间位置的内容**利用率显著低于首尾**——U 形曲线。20 篇文档时中间位置准确率从–75% 跌到–53%。**RAG 通过 top-k + Rerank 天然规避**（相关 chunk 排首尾）。
@@ -1487,13 +1936,31 @@ A. (1) **扫描件识别**：招标公告常含盖章签字扫描，需 PaddleOC
 **Q30. 怎么排查 RAG 系统"答非所问"？**
 A. 按 RAGAS 四指标定位：(1) Context Recall 低 → 检索漏召，调 BM25 / 换 embedding / 加 query 改写；(2) Context Precision 低 → 检索召回太多噪声，加强 filter / 加 Rerank；(3) Faithfulness 低 → LLM 忽略 context，调 prompt / 加 "只基于以下内容回答" / 换更好的 LLM；(4) Answer Relevancy 低 → 切题问题，常见于 prompt 模板设计差。
 
-### 8.12 三句话总结
+**Q31. 向量 RAG 的三个结构性缺陷是什么？为什么调参修不好？**
+A. (1) **多跳推理干不了**——检索只返回 Top-K 相似块，没有集合交集运算；(2) **全局性问题答不上**——"这批文档主要讲什么"本质是 Query-Focused Summarization（归纳任务），不是检索任务；(3) **切块摧毁实体关系**——"卡托普利属于 ACEI"和"肾功能不全者禁用"被切到两个块，因果链断裂。三者根因相同：**向量检索做"找相似文本"，而业务要"理解实体关系"**，属于索引层的架构限制，不是 Query 侧调参能解决的（详见 §8.8.1）。
 
-1. **RAG = 检索 + 生成**，解决 LLM 幻觉、时效、私域、可溯源四大问题；RAG 与 SFT 不是替代而是组合——RAG 给事实、SFT 给格式。**长上下文 ≠ 替代 RAG**——三道坎：成本（1M token 输入约 1–10 美元 vs RAG 约 0.02 美元）、延迟（prefill 数十秒 vs RAG 小于 1 秒）、lost-in-the-middle。
-2. **决定 RAG 质量的是链路里最弱的一环**——文档解析、chunking、embedding 选型、检索策略、rerank、prompt 模板，**每一段都不能省**。经验优先级：解析质量 优先于 embedding 选型，再优先于 chunking，再优先于 检索策略，最后才是 prompt 技巧。
-3. **未来 2–3 年关键趋势**：Qwen3-Embedding / 8B 级别 LLM 当 embedding 底座让 dense 检索逼近闭源 SOTA；Late Chunking 与 Contextual Retrieval 几乎"零成本"补齐 chunk 上下文损失；Agentic RAG 让复杂查询走 LLM 决策的图式 workflow，但 80% 场景仍是 Advanced RAG pipeline 解决。
+**Q32. GraphRAG 与 LightRAG 的核心差异？什么时候选谁？**
+A. 差异在**索引产物**与**查询机制**：GraphRAG 用 LLM 抽实体关系 + Leiden 层次社区 + **每个社区生成预计算报告**，查询时 Global Search 走 Map-Reduce 汇总所有社区报告；LightRAG 用 LLM 抽实体关系 + 生成**检索键值对**，查询时走**双层检索**（low-level 命具体实体、high-level 聚合抽象主题）并补充一跳邻居。
+选谁看三点：**增量更新频率**（高频更新选 LightRAG，GraphRAG 重建社区约 1400 万 token）、**查询量**（查询密集选 GraphRAG，预计算成本可摊薄）、**预算**（预算敏感选 LightRAG，Legal 数据集上单次检索不到 100 token / 1 次 API 调用 vs GraphRAG 约 61 万 token / 数百次调用）。
 
-### 8.13 延伸阅读
+**Q33. LazyGraphRAG "lazy" 在哪里？代价是什么？**
+A. **懒在两处**：索引用 **NLP 名词短语抽取**（非 LLM）建概念共现图，**且完全跳过社区摘要**——所有 LLM 调用延后到查询时。查询时用"迭代加深"结合最佳优先（向量排块 → 聚合出社区排名）与广度优先（LLM 句子级相关性打分 → 递归进子社区），靠**相关性测试预算**这一个旋钮控制成本-质量。
+数字：索引成本 = 向量 RAG = GraphRAG 的 **0.1%**；Z500 配置下以 GraphRAG Global Search **4% 的查询成本**显著优于全部 8 个对照条件。**代价是单次查询 LLM 调用更多、延迟更高**，且每查询成本随预算上升——所以**查询量大、语料稳定时标准 GraphRAG 反而更经济**（详见 §8.8.5）。
+
+**Q34. "GraphRAG 能减少幻觉吗？"——怎么回答才不掉坑？**
+A. **不能笼统地说能**。微软自己的评测显示 GraphRAG 的优势在**全面性（comprehensiveness）、多样性、可溯源**上，而**忠实度（faithfulness）与基线 RAG 持平**。准确表述是：**图 RAG 让答案覆盖更全、引用更清楚，但没有证据表明它提高了单条陈述的事实准确率**。
+补充正确的收益数据：宽泛分析类查询准确率约 **50% → 80%**；超过 5 个实体的查询上向量 RAG 急剧退化而 GraphRAG 稳定；多跳问答 F1 高 5% 以上。答"能减少幻觉"会被追问到证据，必挂（详见 §8.8.4）。
+
+**Q35. 线上图 RAG 效果不如向量 RAG，怎么排查？**
+A. 按顺序查四项：(1) **实体覆盖率**——query 中的实体能解析到图节点的比例，**低于 80% 说明抽取管线漏抽**，这是头号指标；(2) **实体消歧**——同一实体是否分裂成多节点（大小写、法律后缀 `Inc./Ltd./有限公司`、全半角）；(3) **orphan 节点**——增量更新是否用了 `MERGE` + `stale` 软删除而非物理删除；(4) **社区粒度**——全局查询答非所问时调 Leiden 层级，GraphRAG 推荐用 **C2（第三层）**。另外确认没有把 Global Search 当默认项——**生产应默认 Local，只有明显是主题性问题时才回退 Global**（详见 §8.8.9）。
+
+### 8.13 三句话总结
+
+1. **RAG = 检索 + 生成**，解决 LLM 幻觉、时效、私域、可溯源四大问题；RAG 与 SFT 不是替代而是组合——RAG 给事实、SFT 给格式。**长上下文 ≠ 替代 RAG**——三道坎：成本（1M token 输入约 1–10 美元 vs RAG 约 0.02 美元）、延迟（prefill 数十秒 vs RAG 小于 1 秒）、lost-in-the-middle。反过来，**图 RAG 是向量 RAG 的升级**：当查询涉及多跳推理或全局归纳时，要换的不是 Query 侧策略，而是**整个索引层**——向量 RAG 的三个结构性缺陷（多跳无交集、全局问题答不上、切块摧毁实体关系）调参修不好（见 §8.8）。
+2. **决定 RAG 质量的是链路里最弱的一环**——文档解析、chunking、embedding 选型、检索策略、rerank、prompt 模板，**每一段都不能省**。经验优先级：解析质量 优先于 embedding 选型，再优先于 chunking，再优先于 检索策略，最后才是 prompt 技巧。图 RAG 额外要盯**实体覆盖率**：query 实体能解析到图节点的比例低于 80%，说明抽取管线漏抽，这是图 RAG 线上的头号指标（见 §8.8.9）。
+3. **未来 2–3 年关键趋势**：Qwen3-Embedding / 8B 级别 LLM 当 embedding 底座让 dense 检索逼近闭源 SOTA；Late Chunking 与 Contextual Retrieval 几乎"零成本"补齐 chunk 上下文损失；Agentic RAG 让复杂查询走 LLM 决策的图式 workflow，但 80% 场景仍是 Advanced RAG pipeline 解决；**图 + 向量混合 + 意图路由**正在成为关系密集型场景（招投标、企业图谱、医疗）的默认架构，选型看三个判据——**增量更新频率、查询量、预算**。
+
+### 8.14 延伸阅读
 
 #### 论文 / 综述
 
@@ -1505,7 +1972,11 @@ A. 按 RAGAS 四指标定位：(1) Context Recall 低 → 检索漏召，调 BM2
 - **Günther et al., 2024**. "Late Chunking: Contextual Chunk Embeddings Using Long-Context Embedding Models". （Late Chunking 论文）
 - **Cormack, Clarke, Büttcher, 2009**. "Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods". SIGIR 2009. （RRF 原始论文）
 - **Liu et al., 2023**. "Lost in the Middle: How Language Models Use Long Contexts". TACL. （Lost-in-the-Middle 现象）
-- **Edge et al., 2024**. "From Local to Global: A Graph RAG Approach to Query-Focused Summarization". （GraphRAG 微软论文）
+- **Edge et al., 2024**. "From Local to Global: A Graph RAG Approach to Query-Focused Summarization". （GraphRAG 微软论文，§8.8.4）
+- **Guo et al., 2024**. "LightRAG: Simple and Fast Retrieval-Augmented Generation". arXiv:2410.05779.（港大 HKUDS，图索引 + 双层检索 + 增量更新，§8.8.6）
+- **Traag, Waltman & van Eck, 2019**. "From Louvain to Leiden: guaranteeing well-connected communities". Scientific Reports.（Leiden 算法原始论文，GraphRAG 社区检测的基础）
+- **Lewis et al., 2020**. "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks". NeurIPS.（RAG 原始论文）
+- **Gao et al., 2024**. "Retrieval-Augmented Generation for Large Language Models: A Survey".（Naive / Advanced / Modular 三范式出处）
 - **Asai et al., 2023**. "Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection". ICLR 2024.
 - **Yan et al., 2024**. "Corrective Retrieval Augmented Generation". （CRAG）
 - **Kusupati et al., 2022**. "Matryoshka Representation Learning". NeurIPS 2022.
@@ -1529,6 +2000,9 @@ A. 按 RAGAS 四指标定位：(1) Context Recall 低 → 检索漏召，调 BM2
 - **RAGAS 评测框架**：github.com/explodinggradients/ragas
 - **GraphRAG 微软官方**：github.com/microsoft/graphrag
 - **LightRAG (HKUDS)**：github.com/HKUDS/LightRAG
+- **Neo4j 官方**（含 Cypher 教程与 GraphRAG 示例）：github.com/neo4j
+- **NebulaGraph**（国产分布式图库，nGQL，内置 GraphRAG 方案）：github.com/vesoft-inc/nebula
+- **LangChain Neo4j 集成**（`GraphCypherQAChain` 等）：github.com/langchain-ai/langchain-neo4j
 - **Jina Late Chunking 示例**：github.com/jina-ai/late-chunking
 - **BGE 官方仓库**（含 BGE-M3）：github.com/FlagOpen/FlagEmbedding
 - **Qwen3-Embedding 官方**：github.com/QwenLM/Qwen3-Embedding

@@ -117,6 +117,7 @@ nav:
     - 章节:
       - 00. 导读与学习路线图: chapters/00-导读与学习路线图.md
       - 01. 数学基础（大模型面试够用版）: chapters/01-数学基础.md
+      - 01b. 机器学习与深度学习基础（面试够用版）: chapters/01b-机器学习与深度学习基础.md
       - 02. Transformer 与模型架构: chapters/02-Transformer 与模型架构.md
       - 03. 预训练 Pre-Training: chapters/03-预训练 Pre-Training.md
       - 04. 微调与参数高效微调: chapters/04-微调与参数高效微调.md
