@@ -329,7 +329,7 @@ $$
 \theta_t = \theta_{t-1} - \eta \cdot \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon} - \eta\lambda\theta_{t-1}
 $$
 
-其中 `m_t = m_t/(1-β_1ᵗ)`、`v_t = v_t/(1-β_2ᵗ)` 是偏差修正项。
+其中 $m_t = m_t/(1-β_1ᵗ)$、$v_t = v_t/(1-β_2ᵗ)$ 是偏差修正项。
 
 **与 Adam 的关键区别**：AdamW 把权重衰减 λθ 作为**独立的加性项**，而不是加在梯度上（Adam 的 L2 正则会被自适应学习率缩放，导致衰减强度不均）。
 
