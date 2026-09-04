@@ -420,9 +420,9 @@ OpenAI text-embedding-3 也用类似机制（内部不可见）。**实操时一
 
 | 距离 | 公式 | 何时用 |
 |---|---|---|
-| **余弦相似度** | `cos(a,b) = dot(a,b) / (‖a‖·‖b‖)` | 文本长度差异大、多数场景 |
-| **点积（内积）** | `dot(a,b) = Σ a_i·b_i` | 向量已 L2 归一化（等价余弦）、速度优先 |
-| **欧氏距离（L2）** | `‖a-b‖` | 空间结构重要时（少用于 RAG） |
+| **余弦相似度** | $cos(a,b) = dot(a,b) / (‖a‖·‖b‖)$ | 文本长度差异大、多数场景 |
+| **点积（内积）** | $dot(a,b) = Σ a_i·b_i$ | 向量已 L2 归一化（等价余弦）、速度优先 |
+| **欧氏距离（L2）** | $‖a-b‖$ | 空间结构重要时（少用于 RAG） |
 
 - 大多数 embedding 训练时是按余弦相似度优化；**embedding 输出后做 L2 归一化**，点积就等于余弦。
 - OpenAI、BGE、Qwen3-Embedding 默认输出已归一化，**直接用点积**。
@@ -454,7 +454,7 @@ OpenAI text-embedding-3 也用类似机制（内部不可见）。**实操时一
 | **树** | KD-tree、Ball-tree、Annoy | 递归切空间 | 维数大于 20 时退化 | 几乎不用作主索引 |
 | **图** | **HNSW**、NSG、Vamana | 多层可导航小世界图 | 查询 `O(log N)`、插入 `O(log N)` | **2025 年事实标准** |
 | **量化** | PQ、SQ、IVF-PQ | 把向量压缩到几十字节 | 距离计算近似 | **跟 HNSW 组合用** |
-| **倒排** | IVF（Inverted File） | 先聚类分桶、查最近的几桶 | `O(√N)` | 大规模场景 |
+| **倒排** | IVF（Inverted File） | 先聚类分桶、查最近的几桶 | $O(√N)$ | 大规模场景 |
 
 HNSW + 量化（PQ 或 SQ）是当前所有生产级向量库的"标准武器"。
 
@@ -563,13 +563,13 @@ $$
 
 | 符号 | 含义 |
 |---|---|
-| `q_i` | query 中第 i 个词项 |
-| `f(q_i, D)` | `q_i` 在文档 D 中出现的次数（TF） |
+| $q_i$ | query 中第 i 个词项 |
+| `f(q_i, D)` | $q_i$ 在文档 D 中出现的次数（TF） |
 | `|D|` | 文档 D 的长度（词数） |
 | `avgdl` | 语料库平均文档长度 |
 | `k1` | TF 饱和参数，**常用 1.2–2.0，默认 1.2** |
 | `b` | 文档长度归一化，**常用 0.75**，0=不归一化，1=完全归一化 |
-| `IDF(q_i)` | 逆文档频率，`log((N - n(q_i) + 0.5) / (n(q_i) + 0.5) + 1)` |
+| `IDF(q_i)` | 逆文档频率，$log((N - n(q_i) + 0.5) / (n(q_i) + 0.5) + 1)$ |
 
 **为什么 BM25 至今没被淘汰**：
 
@@ -627,8 +627,8 @@ BM25 分数可以 0–50，cosine 分数 0–1；如果直接加，BM25 主导�
 
 | 排名 | RRF 贡献（k=60） |
 |---|---|
-| 1 | `1/61 ≈ 0.01639` |
-| 10 | `1/70 ≈ 0.01429` |
+| 1 | $1/61 ≈ 0.01639$ |
+| 10 | $1/70 ≈ 0.01429$ |
 | 100 | `1/160 = 0.00625` |
 
 排名 1 比 100 多 2.6×；排名 1 比 10 多–15%。**温和的衰减曲线**让"两个检索器都认可"的中等排名比"只有一个第一"更重要。
@@ -651,7 +651,7 @@ GET /bidding_docs/_search
 }
 ```
 
-**加权 RRF**：`sum(w_r / (k + rank_r(d)))`，对偏信某一检索器的场景手动加权。
+**加权 RRF**：$sum(w_r / (k + rank_r(d)))$，对偏信某一检索器的场景手动加权。
 
 #### 8.6.4 Rerank 重排
 
@@ -874,7 +874,7 @@ Self-RAG 的代价：要训一个带 reflection token 的模型；开源版本�
 
 要答对，必须同时拿到三份文档的信息并取交集：供应商档案（哪些是欧洲的）、审计报告（哪些没通过）、合同文档（哪些处理 PII）。向量检索会分别召回提到"欧洲供应商""安全审计""PII"的三堆 chunk，但**没有任何机制做集合交集**，只能一股脑塞给模型，让模型自己去对。
 
-这类 `A → B → C` 的链式推理叫**多跳推理（multi-hop reasoning）**。经典例子是"爱因斯坦的导师的导师是谁"——信息分散在不同文档，一次检索根本串不起来。
+这类 $A → B → C$ 的链式推理叫**多跳推理（multi-hop reasoning）**。经典例子是"爱因斯坦的导师的导师是谁"——信息分散在不同文档，一次检索根本串不起来。
 
 **缺陷二：全局性问题答不上（这不是检索任务）**
 
@@ -1177,7 +1177,7 @@ $$
 N = \{\, v_i \mid v_i \in \mathcal{V} \ \wedge\ (v_i \in \mathcal{N}_v \ \vee\ v_i \in \mathcal{N}_e) \,\}
 $$
 
-其中 `N_v`、`N_e` 分别是被检索到的节点与边的一跳邻居。
+其中 $N_v$、$N_e$ 分别是被检索到的节点与边的一跳邻居。
 
 **实验数据**（UltraDomain 四个数据集，chunk = 1200 token，LLM = GPT-4o-mini）：
 
@@ -1429,13 +1429,13 @@ RAG 系统评估有三大类指标：
 
 #### 8.10.2 检索侧指标
 
-假设 ground truth 相关文档集合 = `G`，模型召回 top-k 集合 = `R_k`。
+假设 ground truth 相关文档集合 = `G`，模型召回 top-k 集合 = $R_k$。
 
 | 指标 | 公式 | 含义 | 何时用 |
 |---|---|---|---|
-| **Recall@k** | `|G ∩ R_k| / |G|` | ground truth 中有多少被召回了 | 关心"漏没漏" |
-| **Precision@k** | `|G ∩ R_k| / k` | 召回了多少是相关的 | 关心"准不准" |
-| **Hit Rate** | `1[recall_at_k 大于 0]` | top-k 至少命中一个 | 1 个正样本时退化 |
+| **Recall@k** | $|G ∩ R_k| / |G|$ | ground truth 中有多少被召回了 | 关心"漏没漏" |
+| **Precision@k** | $|G ∩ R_k| / k$ | 召回了多少是相关的 | 关心"准不准" |
+| **Hit Rate** | $\mathbf{1}[\,\mathrm{recall\_at\_k} > 0\,]$ | top-k 至少命中一个 | 1 个正样本时退化 |
 | **MRR** | `mean(1/rank_of_first_relevant)` | 第一个相关文档的倒数排名 | 关心"第一的位置" |
 | **NDCG@k** | 按相关性等级加权 | 位置 + 等级 | 多级相关性（完美/部分/无关） |
 | **MAP** | 各 query AP 平均 | 平均精度均值 | 多相关文档 |
@@ -1486,7 +1486,7 @@ $$
 \mathrm{ContextPrecision} = \frac{\sum_{k=1}^{K} (\mathrm{Precision@k}) \cdot v_k}{\sum_{k=1}^{K} v_k}
 $$
 
-`v_k ∈ {0, 1}` 表示第 k 个 chunk 是否相关；带 precision 加权 = MAP 的变体。
+$v_k ∈ {0, 1}$ 表示第 k 个 chunk 是否相关；带 precision 加权 = MAP 的变体。
 
 低 Context Precision 的代价：喂给 LLM 大量噪声 → 容易 hallucinate，且增加 token 成本。
 
@@ -1813,7 +1813,7 @@ cache.init(
 [2] ...
 ```
 
-**Anthropic Contextual Retrieval**（2024-09）报告：**Contextual Embeddings 让 top-20 失败率从 5.7% 降到 3.7%（降 35%）；加 Contextual BM25 降到 2.9%（49%）；再加 Rerank 降到 1.9%（67%）**。代价：每个 chunk 多一次 LLM 推理，但配合 prompt caching 成本可控制在 **$1.02 / 百万文档 token**（数据来源：anthropic.com/engineering/contextual-retrieval）。
+**Anthropic Contextual Retrieval**（2024-09）报告：**Contextual Embeddings 让 top-20 失败率从 5.7% 降到 3.7%（降 35%）；加 Contextual BM25 降到 2.9%（49%）；再加 Rerank 降到 1.9%（67%）**。代价：每个 chunk 多一次 LLM 推理，但配合 prompt caching 成本可控制在 **\$1.02 / 百万文档 token**（数据来源：anthropic.com/engineering/contextual-retrieval）。
 
 #### 8.11.8 监控指标
 
@@ -1898,13 +1898,13 @@ A. 向量超过单机 RAM 时。**SQ (int8)** 4× 压缩、几乎无损、最简
 A. 已有 ES / 重 BM25 → ES + RRF；高并发 / 亿级 → Milvus / Qdrant；轻量 / 原型 → Chroma / LanceDB；跟业务库同库 → pgvector；想要开箱混合 → Qdrant。
 
 **Q18. BM25 公式写一下？**
-A. `score(D,Q) = Σ IDF(q_i) · f(q_i,D)·(k1+1) / (f(q_i,D) + k1·(1-b+b·|D|/avgdl))`。`k1=1.2`、`b=0.75` 是默认；`b=0` 不归一化、`b=1` 完全归一化。
+A. $score(D,Q) = Σ IDF(q_i) · f(q_i,D)·(k1+1) / (f(q_i,D) + k1·(1-b+b·|D|/avgdl))$。`k1=1.2`、`b=0.75` 是默认；`b=0` 不归一化、`b=1` 完全归一化。
 
 **Q19. 为什么需要混合检索？**
 A. 单一 dense 检索对精确关键词（产品编号、错误码、缩写）容易漏；单一 BM25 不理解语义。**混合 = 互相补漏**——dense 抓语义、BM25 抓精确。
 
 **Q20. RRF 为什么不用分数加和？**
-A. BM25 分数 0–50、cosine 0–1，**量纲不同**。即使做 min-max 归一化，归一化窗口小（top-10）时会污染。RRF 用 rank 天然规避——`RRF_score(d) = Σ 1/(k + rank_r(d))`，`k=60` 默认。
+A. BM25 分数 0–50、cosine 0–1，**量纲不同**。即使做 min-max 归一化，归一化窗口小（top-10）时会污染。RRF 用 rank 天然规避——$RRF_score(d) = Σ 1/(k + rank_r(d))$，`k=60` 默认。
 
 **Q21. Cross-Encoder 为什么比 Bi-Encoder 准？**
 A. Bi-Encoder 分别编码后做点积，**信息瓶颈在两段向量拼接处**；Cross-Encoder 把 query+doc 拼一起过 transformer，每层 self-attention **充分交互**（"投标人"和"资质"之间的关系被精确建模）。代价：每对都要过一次模型，**慢**。所以用在 Rerank 阶段（top-50–200）。
