@@ -1,0 +1,35 @@
+name: 校验脚本假 PASS 检测
+
+# 独立 workflow，不并入 deploy-docs.yml：
+# 检测器管的是仓库里的开发/校验脚本，不是站点内容。若并进部署流程，
+# 一个劣质的校验脚本就会把文档发布卡住，也会污染「Actions 部署 success」
+# 这个验证判据。分开跑，各自有各自的信号。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 检测器只用标准库（ast / pathlib / sys），无需 pip install
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # 第一步必须先自检：确认检测器自己还灵。
+      # 只跑真实扫描的 PASS 无法区分「真没问题」和「检测器瞎了」——
+      # 第一版就曾把 gs/gt 累加器误判成防线而漏报。
+      - name: 自检（证明检测器本身有效）
+        run: python lint_verify_scripts.py --self-test
+
+      - name: 扫描全仓库
+        run: python lint_verify_scripts.py .

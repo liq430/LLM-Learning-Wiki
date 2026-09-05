@@ -28,9 +28,17 @@ r"""
 
 ## 用法
 
+    python3 lint_verify_scripts.py --self-test   # 先验检测器本身（CI 必跑）
     python3 lint_verify_scripts.py [目录或文件 ...]
 
 退出码：0 = 未发现风险；1 = 发现风险（CI 可直接用）
+
+## 为什么必须有 --self-test
+
+检测器悄悄退化成「永远 PASS」是完全可能的——第一版就漏报过：把 `gs`/`gt`
+这两个**被比较的累加器本身**误判成防线。所以每次跑都要先确认：
+该报的报得出来（BAD 用例）、不该报的不误伤（GOOD 用例）。
+只跑一遍真实代码 PASS，无法区分「真没问题」和「检测器瞎了」。
 """
 import ast
 import pathlib
@@ -171,8 +179,96 @@ def analyze(path: pathlib.Path):
     return risks, ""
 
 
+# --------------------------------------------------------------------------
+# 自检用例：证明「这个检测器自己还灵」
+#
+# 检测器悄悄退化成「永远 PASS」是完全可能的（第一版就漏报过：把 gs/gt 累加器
+# 误判成防线）。所以把双向自证固化下来：CI 每次先跑 --self-test，
+# 确认该报的报、不该报的不报，再去扫真实代码。
+# --------------------------------------------------------------------------
+BAD_FAKE_PASS = '''
+def main():
+    gs = gt = 0
+    problems = []
+    for x in items:
+        try:
+            r = probe(x)
+        except Exception as e:
+            problems.append(x)
+            continue
+        gs += 1; gt += r
+    ok = (gs == gt)
+    return 0 if ok else 1
+'''
+
+GOOD_VERIFIED = '''
+def main():
+    gs = gt = 0
+    verified = 0
+    items = list(range(10))
+    problems = []
+    for x in items:
+        try:
+            r = probe(x)
+        except Exception as e:
+            problems.append(x)
+            continue
+        verified += 1
+        gs += 1; gt += r
+    ok = (gs == gt and not problems and verified == len(items))
+    return 0 if ok else 1
+'''
+
+GOOD_PROBLEMS_GUARD = '''
+def main():
+    gs = gt = 0
+    problems = []
+    for x in items:
+        try:
+            r = probe(x)
+        except Exception as e:
+            problems.append(x)
+            continue
+        gs += 1; gt += r
+    ok = (gs == gt and not problems)
+    return 0 if ok else 1
+'''
+
+SELF_TESTS = [
+    ("应报出：裸累加器比较 gs == gt（全挂时 0 == 0 假 PASS）",
+     BAD_FAKE_PASS, True),
+    ("不应报出：有 verified == len(items) 显式计数",
+     GOOD_VERIFIED, False),
+    ("不应报出：有 not problems 兜底（弱一档但有效）",
+     GOOD_PROBLEMS_GUARD, False),
+]
+
+
+def self_test():
+    """双向自证：该报的必须报、不该报的不能报。任一用例不符即失败。"""
+    import tempfile
+    print("自检：证明检测器本身仍然有效\n")
+    failed = 0
+    with tempfile.TemporaryDirectory() as td:
+        for i, (desc, code, expect_risk) in enumerate(SELF_TESTS):
+            p = pathlib.Path(td) / f"case_{i}.py"
+            p.write_text(code, encoding="utf-8")
+            risks, note = analyze(p)
+            got = bool(risks)
+            ok = (got == expect_risk)
+            failed += 0 if ok else 1
+            # note 为空 = 命中了风险循环且有 ok 判定式，但已识别为有防线
+            detail = "报出风险" if got else (note if note else "已识别为有防线")
+            print(f"  [{'OK ' if ok else 'BAD'}] {desc}\n"
+                  f"         实际：{detail}")
+    print(f"\n  ===> {'PASS：检测器本身有效' if failed == 0 else f'FAIL：{failed} 个自检用例不符'}")
+    return 1 if failed else 0
+
+
 def main(argv):
-    targets = argv[1:] or ["."]
+    if "--self-test" in argv[1:]:
+        return self_test()
+    targets = [a for a in argv[1:] if not a.startswith("--")] or ["."]
     files = []
     for t in targets:
         p = pathlib.Path(t)
