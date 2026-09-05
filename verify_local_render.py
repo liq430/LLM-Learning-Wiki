@@ -8,13 +8,20 @@ r"""
 1. `mkdocs build --clean` 会释放 site/ 的 inode，外部常驻的 http.server 会
    立刻失效并返回 502；本脚本在进程内起服务，生命周期与验证任务严格一致。
 2. 环境变量里有 HTTP_PROXY（127.0.0.1:51527），Chromium 默认会走它访问
-   127.0.0.1:8899 而失败；必须显式 `proxy={'server': 'direct://'}`。
+   127.0.0.1:<PORT> 而失败。注意：`proxy={'server': 'direct://'}` **实测无效**，
+   必须靠 `--no-proxy-server` 启动参数 + 清掉进程内代理环境变量双保险（见 main()）。
 
 统计口径与 mkdocs_hooks.py 的保护逻辑一致（$$ 不要求独占一行），复查四件事：
   1) 源文件公式数  ==  页面渲染出的公式数
   2) MathJax 渲染失败数（merror）== 0
   3) 渲染后页面是否残留未处理的 $$ / \[ / \begin{
   4) 公式是否被 <em> 从中间切断
+  5) 所有章节都真正跑完（verified == 章节总数）
+
+关于第 5 条——这是「假 PASS」的防线。本类脚本的通用病害：
+遍历 N 个对象，失败就 `continue`，最后比较总数。若全挂，累加器全是 0，
+`gs == gt` 成立 → 打印 PASS。因此必须显式统计真正跑完的数量，
+且 `verified == len(chapters)` 要进判定式，不能只靠 `not problems` 兜底。
 """
 import os
 import re
@@ -100,6 +107,7 @@ def main():
     print("  " + "-" * 74)
 
     gs = gt = gf = gl = gem = 0
+    verified = 0                  # 真正取到渲染结果的章节数（假 PASS 防线）
     problems = []
     with sync_playwright() as pw:
         b = pw.chromium.launch(args=["--no-proxy-server"])
@@ -121,6 +129,7 @@ def main():
                 continue
             page.wait_for_timeout(500)
             r = page.evaluate(PROBE)
+            verified += 1         # 放在所有 continue 之后
             gs += nsrc; gt += r["total"]; gf += r["failed"]
             gl += len(r["leftover"]); gem += r["emInsideMath"]
             marks = []
@@ -145,14 +154,26 @@ def main():
     httpd.shutdown()
 
     print("\n" + "=" * 74)
+    print(f"  已验证章节 {verified}/{len(chapters)}")
     print(f"  源文件公式合计 {gs} 个 | 页面渲染 {gt} 个 | 差值 {gt - gs}")
     print(f"  MathJax 渲染失败 {gf} 个 | 未处理残留 {gl} 处 | 被 <em> 切断 {gem} 处")
     if problems:
-        print(f"\n  问题章节 {len(problems)} 个：")
+        print(f"\n  问题明细（共 {len(problems)} 条）：")
         for x in problems[:20]:
             print(f"    - {x}")
-    ok = (gf == 0 and gl == 0 and gem == 0 and gs == gt and not problems)
-    print("  ===> " + ("PASS：全站公式渲染完整且无失败" if ok else "FAIL，见上方明细"))
+        if len(problems) > 20:
+            print(f"    ... 另有 {len(problems) - 20} 条未展示")
+    # verified 必须等于章节总数：否则「一章都没打开」时 gs == gt == 0
+    # 会让判定成立，报出一个彻头彻尾的假 PASS。
+    ok = (gf == 0 and gl == 0 and gem == 0 and gs == gt
+          and not problems and verified == len(chapters))
+    if verified != len(chapters):
+        print(f"  ===> FAIL：{len(chapters) - verified} 章未真正完成验证，"
+              f"统计口径不成立（数字再漂亮也不能算通过）")
+    elif ok:
+        print("  ===> PASS：全站公式渲染完整且无失败")
+    else:
+        print("  ===> FAIL，见上方明细")
     return 0 if ok else 1
 
 
