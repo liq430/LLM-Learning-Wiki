@@ -1435,7 +1435,7 @@ RAG 系统评估有三大类指标：
 |---|---|---|---|
 | **Recall@k** | $|G ∩ R_k| / |G|$ | ground truth 中有多少被召回了 | 关心"漏没漏" |
 | **Precision@k** | $|G ∩ R_k| / k$ | 召回了多少是相关的 | 关心"准不准" |
-| **Hit Rate** | $\mathbf{1}[\,\mathrm{recall\_at\_k} > 0\,]$ | top-k 至少命中一个 | 1 个正样本时退化 |
+| **Hit Rate** | $\mathbf{1}[\,\mathrm{Recall@k} > 0\,]$ | top-k 至少命中一个 | 1 个正样本时退化 |
 | **MRR** | `mean(1/rank_of_first_relevant)` | 第一个相关文档的倒数排名 | 关心"第一的位置" |
 | **NDCG@k** | 按相关性等级加权 | 位置 + 等级 | 多级相关性（完美/部分/无关） |
 | **MAP** | 各 query AP 平均 | 平均精度均值 | 多相关文档 |
