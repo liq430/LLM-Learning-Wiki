@@ -80,7 +80,7 @@ $$
 神经语言模型用神经网络参数化每个条件概率：
 
 $$
-P(x_t \mid x_{<t}) = \text{softmax}(h_t W_{\text{head}})
+P(x_t \mid x_{1:t-1}) = \text{softmax}(h_t W_{\text{head}})
 $$
 
 其中 h_t 是第 t 个位置的隐藏状态，W_head 是输出投影矩阵（词表大小 V × 隐藏维度 d）。
@@ -90,7 +90,7 @@ $$
 训练目标是最大化整个序列的对数似然，等价于最小化交叉熵损失：
 
 $$
-\mathcal{L}_{\text{CLM}} = -\frac{1}{n}\sum_{t=1}^{n} \log P_\theta(x_t \mid x_{<t})
+\mathcal{L}_{\text{CLM}} = -\frac{1}{n}\sum_{t=1}^{n} \log P_\theta(x_t \mid x_{1:t-1})
 $$
 
 **关键性质**：每个位置都产生监督信号。一个长度为 2048 的序列，一次前向就产生 2048 个训练样本——这是 Decoder-only 训练效率高的根本原因。
@@ -126,7 +126,7 @@ $$
 **定义**：困惑度是交叉熵的指数形式。对分词后的序列（共 N 个 token）：
 
 $$
-\text{PPL} = \exp\left(-\frac{1}{N}\sum_{t=1}^{N} \log P_\theta(x_t \mid x_{<t})\right) = \exp(\mathcal{L})
+\text{PPL} = \exp\left(-\frac{1}{N}\sum_{t=1}^{N} \log P_\theta(x_t \mid x_{1:t-1})\right) = \exp(\mathcal{L})
 $$
 
 **直觉理解**：PPL 可以理解为"模型在每个位置上，相当于在多少个候选词之间做等概率的随机猜测"。PPL = 10 意味着模型的不确定度等价于在 10 个词里均匀瞎猜。

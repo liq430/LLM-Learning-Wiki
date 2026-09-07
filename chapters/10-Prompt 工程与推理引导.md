@@ -362,7 +362,7 @@ Kojima et al. 2022（"Large Language Models are Zero-Shot Reasoners"，[arXiv:22
 形式化表达：
 
 $$
-\hat{y} \;=\; \operatorname*{arg\,max}_{y} \; \sum_{i=1}^{N} \mathbb{1}\left[\, \mathrm{extract}(y_i) = y \,\right], \qquad y_i \sim p_\theta(\cdot \mid x, z_i)
+\hat{y} \;=\; \mathrm{arg\,max}_{y} \; \sum_{i=1}^{N} \mathbb{1}\left[\, \mathrm{extract}(y_i) = y \,\right], \qquad y_i \sim p_\theta(\cdot \mid x, z_i)
 $$
 
 其中 $y_i$ 是第 i 条采样推理链 $z_i$ 得到的完整输出，`extract` 是答案抽取函数。它与 10.3.1 的边缘化公式是显式与隐式的关系：SC 是对 `p(y|x)` 中推理链求和的蒙特卡洛近似——采样多条 `z`，各自推出 `y`，再用频率近似积分。
@@ -914,7 +914,7 @@ Zhou et al. 2022（"Large Language Models Are Human-Level Prompt Engineers"，[a
 形式化目标：
 
 $$
-\hat{\rho} \;=\; \operatorname*{arg\,max}_{\rho} \; \mathbb{E}_{(x, y) \sim \mathcal{D}_{\mathrm{train}}} \left[ \, \mathrm{score}\left( f_\theta(\rho, x),\; y \right) \, \right]
+\hat{\rho} \;=\; \mathrm{arg\,max}_{\rho} \; \mathbb{E}_{(x, y) \sim \mathcal{D}_{\mathrm{train}}} \left[ \, \mathrm{score}\left( f_\theta(\rho, x),\; y \right) \, \right]
 $$
 
 其中 rho 是候选指令、f_theta 是被优化的模型。APE 在部分任务上达到甚至超过人工 prompt 的水平——"写 prompt"这件事第一次被证明可以自动化。
