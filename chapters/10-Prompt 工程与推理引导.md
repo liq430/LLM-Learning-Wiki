@@ -589,7 +589,7 @@ k 固定的问题：有时最可信的候选只有 3 个（k=50 会放进 47 个
 Holtzman et al. 2019（"The Curious Case of Neural Text Degeneration"，[arXiv:1904.09751](https://arxiv.org/abs/1904.09751)）提出：**截断点由累计概率动态决定**——取概率和首次超过 p 的最小候选集（nucleus），重新归一化后采样：
 
 $$
-\mathcal{V}_p \;=\; \min \left\{ S \subseteq \mathcal{V} \;:\; \sum_{v \in S} p(v \mid v_{1:t-1}) \;\geq\; p \right\}, \qquad p_p(v) \;=\; \frac{p(v)\,\mathbb{1}[v \in \mathcal{V}_p]}{\sum_{u \in \mathcal{V}_p} p(u)}
+\mathcal{V}_p \;=\; \min \left\lbrace S \subseteq \mathcal{V} \;:\; \sum_{v \in S} p(v \mid v_{1:t-1}) \;\geq\; p \right\rbrace, \qquad p_p(v) \;=\; \frac{p(v)\,\mathbb{1}[v \in \mathcal{V}_p]}{\sum_{u \in \mathcal{V}_p} p(u)}
 $$
 
 分布尖时 nucleus 很小（自动收紧），分布平时 nucleus 变大（自动放开）——**按熵自适应，比固定 k 合理**，这也是它成为主流默认的原因。典型取值 0.9–0.95；过小（如 0.5）会让文本单调。
