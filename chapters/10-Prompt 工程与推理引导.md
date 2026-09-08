@@ -447,7 +447,7 @@ Yao et al. 2023（"Tree of Thoughts: Deliberate Problem Solving with Large Langu
 | **评估（Evaluator）** | 候选好坏怎么判 | value prompt 打 1–10 分，或让模型在候选间投票 |
 | **搜索（Search）** | 候选怎么组织遍历 | BFS / DFS，保留 top-b 分支、可回溯 |
 
-经典结果：在 24 点游戏上，GPT-4 直接求解约个位数成功率，CoT 略好但仍在个位数到两位数之间（不同设置 4%–12%），ToT 达到 **74%**。差距来源很直观——24 点必须试错与回溯，链式推理没有撤销机制。
+经典结果：在 24 点游戏上，GPT-4 直接 IO 约 7.3%，CoT 约 4.0%（**链式推理在该任务反而更差**——没有撤销机制，一步走错全链报废），ToT（b=5）达到 **74%**。差距来源很直观——24 点必须试错与回溯，链式推理没有撤销机制。
 
 一个最小可用的 ToT prompt 骨架（以 24 点为例，四组件各占一段）：
 
@@ -525,7 +525,7 @@ Reflexion 的最小闭环（伪流程）：
 
 ![react_loop](../images/react_loop.png)
 
-> 上图示意 ReAct（Yao et al. 2022，[arXiv:2210.03629](https://arxiv.org/abs/2210.03629)）的 Thought-Action-Observation 循环：推理与行动交替进行，每步行动的真实结果（Observation）作为外部反馈注入下一步推理。ReAct 是"外部信号驱动修正"的最小闭环，也是第 8 章 Agentic RAG 与第 11 章智能体的基础范式。
+> 上图示意 ReAct（Yao et al. 2022，[arXiv:2210.03629](https://arxiv.org/abs/2210.03629)）的 Thought-Action-Observation 循环：推理与行动交替进行，每步行动的真实结果（Observation）作为外部反馈注入下一步推理。ReAct 是"外部信号驱动修正"的最小闭环，也是第 8 章 Agentic RAG 与第 9 章智能体的基础范式。
 
 #### 10.4.4 并行 vs 串行：测试时扩展的两条曲线
 
@@ -807,7 +807,7 @@ Prompt 是用自然语言写的"程序"，但这个程序有一个传统软件�
 
 #### 10.7.2 直接注入与越狱分类学
 
-**直接注入**：攻击者在对话输入里直接覆盖系统指令。最经典的形式来自 Perez & Ribeiro 2021（"Ignore Previous Prompt: Attack Techniques For Language Models"，arXiv:2108.07303）：
+**直接注入**：攻击者在对话输入里直接覆盖系统指令。最经典的形式来自 Perez & Ribeiro 2022（"Ignore Previous Prompt: Attack Techniques For Language Models"，arXiv:2211.0952703）：
 
 ```
 用户输入：
@@ -930,7 +930,7 @@ meta-prompt 内容（示意）：
 我有一个任务指令需要优化。以下是历史候选与得分：
 - "Solve the math problem."  → 61.3
 - "Let's think step by step." → 65.1
-- "Take a deep breath and work on this problem step-by-step." → 82.0
+- "Take a deep breath and work on this problem step-by-step." → 80.2
 请基于这些结果，提出一条可能得更高分的新指令。
 ```
 
@@ -1018,7 +1018,7 @@ compiled_rag(context=retrieved_docs, question=q)   # 使用编译后的程序
 要点：Kojima et al. 2022，MultiArith 17.7 到 78.7；说明推理行为已在预训练分布中，prompt 是开关不是注入；两阶段（先生成推理，再把推理拼回去出答案）。
 
 **Q6：ToT 与 CoT 的本质区别？**
-要点：链 vs 树；ToT 增加三件事——每步多候选生成、模型自评打分、BFS/DFS 回溯；解决"走错一步全错、无法撤销"的问题；24 点上 74% 对 CoT 个位数到两位数；代价是数倍到数十倍的调用成本。
+要点：链 vs 树；ToT 增加三件事——每步多候选生成、模型自评打分、BFS/DFS 回溯；解决"走错一步全错、无法撤销"的问题；24 点上 ToT（b=5）74% 对 CoT 约 4%、IO 约 7.3%；代价是数倍到数十倍的调用成本。
 
 **Q7：Lost in the Middle 是什么？对 RAG 有什么指导？**
 要点：Liu et al. 2023 的 U 形注意力曲线，答案在中间时准确率从约 75% 跌到约 53%；指导：rerank 后 top chunk 放首尾、Q+Docs+Q 结构、结尾重申指令、能砍掉的上下文就砍。
@@ -1099,4 +1099,4 @@ compiled_rag(context=retrieved_docs, question=q)   # 使用编译后的程序
 | 上下文与位置 | Liu et al. 2023 (Lost in the Middle); Hsieh et al. 2024 (RULER) |
 | 校准 | Guo et al. 2017 (On Calibration of Modern Neural Networks) |
 | Prompt 自动化 | Zhou et al. 2022 (APE); Yang et al. 2023 (OPRO); Khattab et al. 2023 (DSPy) |
-| 安全 | Perez & Ribeiro 2021; Greshake et al. 2023 (Indirect Injection); Wei et al. 2023 (Jailbroken); Zou et al. 2023 (GCG) |
+| 安全 | Perez & Ribeiro 2022; Greshake et al. 2023 (Indirect Injection); Wei et al. 2023 (Jailbroken); Zou et al. 2023 (GCG) |
