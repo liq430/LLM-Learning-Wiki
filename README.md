@@ -49,7 +49,7 @@
 
 已发布到腾讯文档的在线版（含渲染后的公式与图片），入口：
 
-**总导航：https://docs.qq.com/aio/DVXJXQnV1VGpMbGRN**
+**总导航：https://docs.qq.com/aio/DVUVKYW13TFBKVExR**
 
 ## 📦 本仓库结构
 
